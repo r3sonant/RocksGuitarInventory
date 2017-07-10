@@ -53,7 +53,15 @@ public final class InventoryContract {
           */
         public static final String _ID = BaseColumns._ID;
 
-        //TODO Add public static final Strings for each column.
+        /**
+         * Image for inventory item.
+         * </p>
+         * Type: String
+         */
+        public static final String COLUMN_ITEM_PICTURE = "picture";
+
+
+
     }
 
 }
