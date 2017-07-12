@@ -93,12 +93,12 @@ public final class InventoryContract {
     /**
      * URI matcher code for the content URI for the pets table
      */
-    private static final int PRODUCTS = 100;
+    private static final int PRODUCTS = 10;
 
     /**
      * URI matcher code for the content URI for a single pet in the pets table
      */
-    private static final int PRODUCT_ID = 101;
+    private static final int PRODUCT_ID = 11;
 
     /**
      * UriMatcher object to match the content URI to a corresponding code.
