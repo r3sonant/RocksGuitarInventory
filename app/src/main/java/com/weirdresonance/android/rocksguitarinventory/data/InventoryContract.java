@@ -81,6 +81,13 @@ public final class InventoryContract {
          * Type: Int
          */
         public static final String COLUMN_ITEM_QUANTITY = "quantity";
+
+        /**
+         * Supplier of items.
+         * <p>
+         * Type: String
+         */
+        public static final String COLUMN_ITEM_SUPPLIER = "supplier";
     }
 
     /**
