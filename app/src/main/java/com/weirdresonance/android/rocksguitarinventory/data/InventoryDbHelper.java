@@ -6,8 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.InventoryEntry;
 
-import static android.R.attr.version;
-
 /**
  * Created by Stephen.Pierce on 11/07/2017.
  */
@@ -40,11 +38,11 @@ public class InventoryDbHelper extends SQLiteOpenHelper{
         // Create the SQL statement string that will create the Inventory table.
         String SQL_CREATE_INVENTORY_TABLE = "CREATE TABLE" + InventoryEntry.TABLE_NAME + " ("
                 + InventoryEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + InventoryEntry.COLUMN_ITEM_PICTURE + " TEXT NOT NULL, "
-                + InventoryEntry.COLUMN_ITEM_NAME + " TEXT NOT NULL, "
-                + InventoryEntry.COLUMN_ITEM_PRICE + " INTEGER NOT NULL, "
-                + InventoryEntry.COLUMN_ITEM_QUANTITY + " INTEGER NOT NULL DEFAULT 0, "
-                + InventoryEntry.COLUMN_ITEM_SUPPLIER + " TEXT NOT NULL);";
+                + InventoryEntry.COLUMN_PRODUCT_PICTURE + " TEXT NOT NULL, "
+                + InventoryEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL, "
+                + InventoryEntry.COLUMN_PRODUCT_PRICE + " INTEGER NOT NULL, "
+                + InventoryEntry.COLUMN_PRODUCT_QUANTITY + " INTEGER NOT NULL DEFAULT 0, "
+                + InventoryEntry.COLUMN_PRODUCT_SUPPLIER + " TEXT NOT NULL);";
 
         // Run the SQL statement and create the table.
         db.execSQL(SQL_CREATE_INVENTORY_TABLE);

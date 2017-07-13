@@ -59,35 +59,35 @@ public final class InventoryContract {
          * </p>
          * Type: String
          */
-        public static final String COLUMN_ITEM_PICTURE = "picture";
+        public static final String COLUMN_PRODUCT_PICTURE = "picture";
 
         /**
          * Name of the item.
          * <p>
          * Type: String
          */
-        public static final String COLUMN_ITEM_NAME = "name";
+        public static final String COLUMN_PRODUCT_NAME = "name";
 
         /**
          * Price of the item.
          * <p>
          * Type: Float
          */
-        public static final String  COLUMN_ITEM_PRICE = "price";
+        public static final String COLUMN_PRODUCT_PRICE = "price";
 
         /**
          * Quantity of items.
          * <p>
          * Type: Int
          */
-        public static final String COLUMN_ITEM_QUANTITY = "quantity";
+        public static final String COLUMN_PRODUCT_QUANTITY = "quantity";
 
         /**
          * Supplier of items.
          * <p>
          * Type: String
          */
-        public static final String COLUMN_ITEM_SUPPLIER = "supplier";
+        public static final String COLUMN_PRODUCT_SUPPLIER = "supplier";
     }
 
     /**

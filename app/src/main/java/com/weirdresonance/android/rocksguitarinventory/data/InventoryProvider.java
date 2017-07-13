@@ -9,7 +9,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
+import static android.R.attr.name;
+import static android.R.attr.value;
 import static com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.CONTENT_AUTHORITY;
 import static com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.InventoryEntry;
 import static com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.PATH_INVENTORY;
@@ -86,6 +89,11 @@ public class InventoryProvider extends ContentProvider {
         return cursor;
     }
 
+    /**
+     * Returns the data MIME type of the content URI.
+     * @param uri
+     * @return
+     */
     @Override
     public String getType(Uri uri) {
         final int match = sUriMatcher.match(uri);
@@ -99,9 +107,84 @@ public class InventoryProvider extends ContentProvider {
         }
     }
 
+    /**
+     * Insert new product data into the provider if the URI passed in is for PRODUCTS.
+     * @param uri
+     * @param values
+     * @return
+     */
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        return null;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PRODUCTS:
+                return insertProduct(uri, values);
+            default:
+                throw new IllegalArgumentException("You cannot insert data with this " + " URI.");
+        }
+    }
+
+    private Uri insertProduct(Uri uri, ContentValues values) {
+        // Check String picture isn't null.
+        String picture = values.getAsString(InventoryEntry.COLUMN_PRODUCT_PICTURE);
+        if (picture == null) {
+            throw new IllegalArgumentException("Product requires a picture");
+        }
+
+        // Check String name isn't null.
+        String name = values.getAsString(InventoryEntry.COLUMN_PRODUCT_NAME);
+        if (name == null) {
+            throw new IllegalArgumentException("Product requires a valid name.");
+        }
+
+        // Check int price isn't null.
+        Integer price = values.getAsInteger(InventoryEntry.COLUMN_PRODUCT_PRICE);
+        if (price == null) {
+            throw new IllegalArgumentException("Product requires a valid price.");
+        }
+
+        // Check int quantity isn't null.
+        Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_PRODUCT_QUANTITY);
+        if (quantity == null) {
+            throw new IllegalArgumentException("Product requires a valid quantity.");
+        }
+
+        // Check String supplier isn't null.
+        String supplier = values.getAsString(InventoryEntry.COLUMN_PRODUCT_SUPPLIER);
+        if (supplier == null) {
+            throw new IllegalArgumentException("Product requires a valid supplier.");
+        }
+
+
+        // TODO: Add some error checking if a value isn't mandatory.
+/*        // If the weight is provided, check that it's greater than or equal to 0 kg
+        Integer weight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
+
+        if (weight != null && weight < 0) {
+            throw new IllegalArgumentException("Pet requires valid weight");
+        }*/
+
+
+        // Get a writable instance of the database.
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        // Insert the new provided product into the database.
+        long id = database.insert(InventoryEntry.TABLE_NAME, null, values);
+
+
+        // TODO: Make sure the comments make sense.
+        // If the ID is -1, then the insertion failed. Log an error and return null.
+        if (id == -1) {
+            Log.e(LOG_TAG, "Failed to insert row for " + uri);
+            return null;
+        }
+
+        // Notify all listeners that the data has changed for the pet content URI.
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        // Return the new URI with the ID (of the newly inserted row) appended to the end.
+        return ContentUris.withAppendedId(uri, id);
+
     }
 
     @Override
