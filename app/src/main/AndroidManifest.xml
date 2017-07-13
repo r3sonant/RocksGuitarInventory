@@ -19,6 +19,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".EditorActivity"
+            android:theme="@style/AppTheme.ActionBar"
+            android:parentActivityName=".InventoryActivity" >
+        </activity>
+        <provider
+            android:name=".data.InventoryProvider"
+            android:authorities="com.weirdresonance.android.rocksguitarinventory"
+            android:exported="false"/>
     </application>
 
 </manifest>

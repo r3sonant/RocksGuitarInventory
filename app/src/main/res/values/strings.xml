@@ -5,4 +5,12 @@
     <string name="empty_view_instructions">Please click the plectrum button to add some items.</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="sale">Sale</string>
+    <string name="new_product">New Product</string>
+    <string name="edit_product">Edit Product</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
+    <string name="editor_product_insert_failed">Inserting the Product Failed.</string>
+    <string name="editor_product_insert_successful">Inserting the Product Succeeded.</string>
+    <string name="editor_product_update_failed">The Product Update Failed.</string>
+    <string name="editor_product_update_successful">Updating the Product was Succesful</string>
 </resources>
