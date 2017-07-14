@@ -114,7 +114,7 @@ public class InventoryProvider extends ContentProvider {
      * @return
      */
     @Override
-    public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
+    public Uri insert( Uri uri, ContentValues values) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case PRODUCTS:
