@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.InventoryEntry;
@@ -88,13 +87,13 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
             }
         });
 
-        Button sale = (Button) findViewById(R.id.sale_button);
+/*        Button sale = (Button) findViewById(R.id.sale_button);
 
         sale.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
 
             }
-        });
+        });*/
 
         getLoaderManager().initLoader(PRODUCT_LOADER, null, this);
     }

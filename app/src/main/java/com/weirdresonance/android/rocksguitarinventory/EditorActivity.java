@@ -55,6 +55,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     /** Flag to track if a change has been made. */
     private boolean mProductHasChanged = false;
 
+
     /**
      * Listener to detect if the user has interacted with the view so we know they are modifying something.
      */
@@ -113,14 +114,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSupplierEditText.setOnTouchListener(mTouchListener);
 
         String stringMultiplier = mStockMultiplier.getText().toString();
-        final int mulitplier = new Integer(stringMultiplier);
-        Button decrease = (Button) findViewById(R.id.decrease);
+        final int multiplier = Integer.valueOf(stringMultiplier);
 
+        Button decrease = (Button) findViewById(R.id.decrease);
 
         decrease.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                decreaseQuantity(mulitplier);
+                decreaseQuantity(multiplier);
             }
         });
 
@@ -128,7 +129,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         increase.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                increaseQuantity(mulitplier);
+                increaseQuantity(multiplier);
             }
         });
     }
@@ -465,8 +466,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     public void decreaseQuantity(int stockMultiplier) {
-        if (mCurrentProductUri != null) {
+        String stringQuantity = mQuantityEditText.getText().toString();
+        int quantity = Integer.valueOf(stringQuantity);
+        if ((mCurrentProductUri != null) && ( quantity> 0)) {
 
+            quantity = quantity - stockMultiplier;
+            if (quantity < 1) {
+                quantity = 0;
+            }
+            stringQuantity = Integer.toString(quantity);
+            mQuantityEditText.setText(stringQuantity);
         }
     }
 

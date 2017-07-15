@@ -169,7 +169,8 @@
                 android:id="@+id/multiplyer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="number" />
+                android:inputType="number"
+                android:text="1" />
         </LinearLayout>
 
         <RelativeLayout
