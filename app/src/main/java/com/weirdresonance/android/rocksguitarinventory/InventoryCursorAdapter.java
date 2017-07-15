@@ -8,11 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.weirdresonance.android.rocksguitarinventory.data.InventoryContract;
-
-import org.w3c.dom.Text;
-
-import static android.R.attr.name;
+import com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.InventoryEntry;
 
 /**
  * Created by Stephen.Pierce on 14/07/2017.
@@ -35,16 +31,16 @@ public class InventoryCursorAdapter extends CursorAdapter {
         TextView priceTextView = (TextView) view.findViewById(R.id.product_price);
         TextView quantityTextView = (TextView) view.findViewById(R.id.product_quantity);
 
-        int nameColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_PRODUCT_NAME);
-        int priceColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_PRODUCT_PRICE);
-        int quantityColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_PRODUCT_QUANTITY);
+        int nameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_NAME);
+        int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_PRICE);
+        int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_QUANTITY);
 
         String productName = cursor.getString(nameColumnIndex);
         String productPrice = cursor.getString(priceColumnIndex);
-        //String productQuantity = cursor.getString(quantityColumnIndex);
+        String productQuantity = cursor.getString(quantityColumnIndex);
 
         nameTextView.setText(productName);
         priceTextView.setText(productPrice);
-        //quantityTextView.setText(productQuantity);
+        quantityTextView.setText(productQuantity);
     }
 }

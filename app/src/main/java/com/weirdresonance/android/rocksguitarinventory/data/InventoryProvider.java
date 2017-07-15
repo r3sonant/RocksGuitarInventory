@@ -11,8 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import static android.R.attr.name;
-import static android.R.attr.value;
 import static com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.CONTENT_AUTHORITY;
 import static com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.InventoryEntry;
 import static com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.PATH_INVENTORY;
@@ -138,7 +136,7 @@ public class InventoryProvider extends ContentProvider {
         }
 
         // Check int price isn't null.
-        Integer price = values.getAsInteger(InventoryEntry.COLUMN_PRODUCT_PRICE);
+        Float price = values.getAsFloat(InventoryEntry.COLUMN_PRODUCT_PRICE);
         if (price == null) {
             throw new IllegalArgumentException("Product requires a valid price.");
         }
@@ -189,11 +187,127 @@ public class InventoryProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        //TODO: Clean up comments here
+        // Get writable database
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        // Track the number of rows that were deleted.
+        int rowsDeleted;
+
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PRODUCTS:
+                // Delete all rows that match the selection and selection args
+                rowsDeleted =  database.delete(InventoryEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case PRODUCT_ID:
+                // Delete a single row given by the ID in the URI
+                selection = InventoryEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                rowsDeleted = database.delete(InventoryEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Deletion is not supported for " + uri);
+        }
+
+        // If 1 or more rows were deleted, then notify all listeners that the data at the
+        // given URI has changed
+        if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Return the number of rows deleted
+        return rowsDeleted;
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        //TODO: Clean up comments here.
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PRODUCTS:
+                return updatePet(uri, values, selection, selectionArgs);
+            case PRODUCT_ID:
+                // For the PET_ID code, extract out the ID from the URI,
+                // so we know which row to update. Selection will be "_id=?" and selection
+                // arguments will be a String array containing the actual ID.
+                selection = InventoryEntry._ID + "=?";
+                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                return updatePet(uri, values, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Update is not supported for " + uri);
+        }
     }
+
+
+    //TODO: Clean up comments here.
+    /**
+     * Update pets in the database with the given content values. Apply the changes to the rows
+     * specified in the selection and selection arguments (which could be 0 or 1 or more pets).
+     * Return the number of rows that were successfully updated.
+     */
+    private int updatePet(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        // If the {@link PetEntry#COLUMN_PET_NAME} key is present,
+        // check that the name value is not null.
+        if (values.containsKey(InventoryEntry.COLUMN_PRODUCT_NAME)) {
+            String name = values.getAsString(InventoryEntry.COLUMN_PRODUCT_NAME);
+            if (name == null) {
+                throw new IllegalArgumentException("You must enter a product name.");
+            }
+        }
+
+        // If the {@link PetEntry#COLUMN_PET_GENDER} key is present,
+        // check that the gender value is valid.
+        if (values.containsKey(InventoryEntry.COLUMN_PRODUCT_PRICE)) {
+            Float price = values.getAsFloat(InventoryEntry.COLUMN_PRODUCT_PRICE);
+            if (price == null) {
+                throw new IllegalArgumentException("You must enter a product price.");
+            }
+        }
+
+        // If the {@link PetEntry#COLUMN_PET_WEIGHT} key is present,
+        // check that the weight value is valid.
+        if (values.containsKey(InventoryEntry.COLUMN_PRODUCT_QUANTITY)) {
+            // Check that the weight is greater than or equal to 0 kg
+            Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_PRODUCT_QUANTITY);
+            if (quantity != null) {
+                throw new IllegalArgumentException("You must enter a quantity for the product.");
+            }
+        }
+
+/*        // If the {@link PetEntry#COLUMN_PET_WEIGHT} key is present,
+        // check that the weight value is valid.
+        if (values.containsKey(InventoryEntry.COLUMN_PRODUCT_SUPPLIER)) {
+            // Check that the weight is greater than or equal to 0 kg
+             weight = values.getAsInteger(InventoryEntry.COLUMN_PRODUCT_SUPPLIER);
+            if (weight != null && weight < 0) {
+                throw new IllegalArgumentException("Pet requires valid weight");
+            }
+        }*/
+
+        // If there are no values to update, then don't try to update the database
+        if (values.size() == 0) {
+            return 0;
+        }
+
+        // Notify all listeners that the data has changed for the pet content URI.
+        getContext().getContentResolver().notifyChange(uri, null);
+        // No need to check the breed, any value is valid (including null).
+
+        // Otherwise, get writable database to update the data
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        // Perform the update on the database and get the number of rows affected
+        int rowsUpdated = database.update(InventoryEntry.TABLE_NAME, values, selection, selectionArgs);
+
+        // If 1 or more rows were updated, then notify all listeners that the data at the
+        // given URI has changed
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Return the number of rows updated
+        return rowsUpdated;
+    }
+
 }

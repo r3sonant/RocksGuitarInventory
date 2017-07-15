@@ -11,13 +11,13 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.weirdresonance.android.rocksguitarinventory.data.InventoryContract;
 import com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.InventoryEntry;
 
 
@@ -67,7 +67,6 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
 
         // Define the click listener.
         productListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 // Create new intent to go to {@link EditorActivity}
@@ -109,6 +108,16 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         if (id == R.id.action_settings) {
             return true;
         }
+        switch (item.getItemId()) {
+            // Respond to a click on the "Insert dummy data" menu option
+            case R.id.action_settings:
+                //insertPet();
+                return true;
+            // Respond to a click on the "Delete all entries" menu option
+            case R.id.action_delete_everything:
+                deleteAllProducts();
+                return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -119,7 +128,8 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         String[] projection = {
                 InventoryEntry._ID,
                 InventoryEntry.COLUMN_PRODUCT_NAME,
-                InventoryEntry.COLUMN_PRODUCT_PRICE };
+                InventoryEntry.COLUMN_PRODUCT_PRICE,
+                InventoryEntry.COLUMN_PRODUCT_QUANTITY};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
@@ -128,8 +138,6 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
                 null,                   // No selection clause
                 null,                   // No selection arguments
                 null);                  // Default sort order
-
-
     }
 
     @Override
@@ -140,5 +148,11 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursorAdapter.swapCursor(null);
+    }
+
+    /** Perform the deletion of all pets in the database **/
+    private void deleteAllProducts() {
+        int rowsDeleted = getContentResolver().delete(InventoryEntry.CONTENT_URI, null, null);
+        Log.v("CatalogActivity", rowsDeleted + " rows deleted from product database");
     }
 }
