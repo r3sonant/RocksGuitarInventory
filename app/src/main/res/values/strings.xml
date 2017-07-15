@@ -13,4 +13,12 @@
     <string name="editor_product_insert_successful">Inserting the Product Succeeded.</string>
     <string name="editor_product_update_failed">The Product Update Failed.</string>
     <string name="editor_product_update_successful">Updating the Product was Succesful</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
+    <string name="unsaved_changes_dialog_msg">There are unsaved changes</string>
+    <string name="delete_dialog_msg">Delete this product?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="editor_product_deletion_failed">Deleting the product failed.</string>
+    <string name="editor_product_deletion_successful">Deleting the product was successful.</string>
 </resources>
