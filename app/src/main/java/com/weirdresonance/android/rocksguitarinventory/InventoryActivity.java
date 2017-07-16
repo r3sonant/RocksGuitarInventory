@@ -164,6 +164,4 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         Log.v("CatalogActivity", rowsDeleted + " rows deleted from product database");
     }
 
-
-
 }

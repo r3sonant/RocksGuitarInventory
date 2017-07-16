@@ -30,7 +30,7 @@
         tools:text="£5.55"/>
 
     <Button
-        android:id="@+id/sale_button"
+        android:id="@+id/sell_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:focusable="false"

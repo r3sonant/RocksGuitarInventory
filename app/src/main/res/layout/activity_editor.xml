@@ -7,7 +7,18 @@
     android:padding="@dimen/activity_margin"
     tools:context=".EditorActivity">
 
+    <LinearLayout
+        android:id="@+id/image_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/product_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_camera_alt_black_24dp"/>
+
+    </LinearLayout>
     <!-- Product Name category -->
     <LinearLayout
         android:layout_width="match_parent"

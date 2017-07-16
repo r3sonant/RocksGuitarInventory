@@ -20,16 +20,21 @@
         </activity>
         <activity
             android:name=".EditorActivity"
-            android:theme="@style/AppTheme.ActionBar"
-            android:parentActivityName=".InventoryActivity" >
+            android:parentActivityName=".InventoryActivity"
+            android:theme="@style/AppTheme.ActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".InventoryActivity" />
         </activity>
+
         <provider
             android:name=".data.InventoryProvider"
             android:authorities="com.weirdresonance.android.rocksguitarinventory"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
 </manifest>

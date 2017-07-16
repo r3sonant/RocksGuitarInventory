@@ -113,15 +113,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mQuantityEditText.setOnTouchListener(mTouchListener);
         mSupplierEditText.setOnTouchListener(mTouchListener);
 
-        String stringMultiplier = mStockMultiplier.getText().toString();
-        final int multiplier = Integer.valueOf(stringMultiplier);
+/*        String stringMultiplier = mStockMultiplier.getText().toString();
+        final int multiplier = Integer.valueOf(stringMultiplier);*/
 
         Button decrease = (Button) findViewById(R.id.decrease);
 
         decrease.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                decreaseQuantity(multiplier);
+                decreaseQuantity();
             }
         });
 
@@ -129,7 +129,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         increase.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                increaseQuantity(multiplier);
+                increaseQuantity();
             }
         });
     }
@@ -465,12 +465,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         finish();
     }
 
-    public void decreaseQuantity(int stockMultiplier) {
+    public void decreaseQuantity() {
+        String stringMultiplier = mStockMultiplier.getText().toString();
+        int multiplier = Integer.valueOf(stringMultiplier);
         String stringQuantity = mQuantityEditText.getText().toString();
         int quantity = Integer.valueOf(stringQuantity);
-        if ((mCurrentProductUri != null) && ( quantity> 0)) {
+        if (mCurrentProductUri != null && quantity> 0 && multiplier > 0) {
 
-            quantity = quantity - stockMultiplier;
+            quantity = quantity - multiplier;
             if (quantity < 1) {
                 quantity = 0;
             }
@@ -479,7 +481,27 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
-    private void increaseQuantity(int stockMultiplier) {
+    private void increaseQuantity() {
+        String stringMultiplier = mStockMultiplier.getText().toString();
+        int multiplier = Integer.valueOf(stringMultiplier);
+        String stringQuantity = mQuantityEditText.getText().toString();
+        int quantity = Integer.valueOf(stringQuantity);
+        if (mCurrentProductUri != null && quantity> 0 && multiplier > 0) {
+
+            quantity = quantity + multiplier;
+            if (quantity < 1) {
+                quantity = 0;
+            }
+            stringQuantity = Integer.toString(quantity);
+            mQuantityEditText.setText(stringQuantity);
+        }
+    }
+
+    public static void sellProduct() {
+
+    }
+
+    public static void takePicture() {
 
     }
 }
