@@ -10,9 +10,13 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -23,11 +27,18 @@ import android.widget.Toast;
 
 import com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.InventoryEntry;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Steev on 06/07/2017.
  */
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    public static final String LOG_TAG = EditorActivity.class.getSimpleName();
 
     /** Content URI for an existing product. This will be null if a new product. */
     private Uri mCurrentProductUri;
@@ -55,6 +66,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     /** Flag to track if a change has been made. */
     private boolean mProductHasChanged = false;
 
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private String mCurrentPhotoPath;
 
     /**
      * Listener to detect if the user has interacted with the view so we know they are modifying something.
@@ -100,7 +114,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             getLoaderManager().initLoader(EXISTING_PRODUCT_LOADER, null, this);
         }
 
-        // Get all the view from the EditorActivity
+        // Get all the views from the EditorActivity
+        // Get all the views from the EditorActivity
         mNameEditText = (EditText) findViewById(R.id.edit_product_name);
         mPriceEditText = (EditText) findViewById(R.id.edit_product_price);
         mQuantityEditText = (EditText) findViewById(R.id.edit_product_quantity);
@@ -133,13 +148,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
+        // Get the picture button and then set an onclick listener on it.
         Button takePicture = (Button) findViewById(R.id.takePicture);
 
         takePicture.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                takePicture();
+                dispatchTakePictureIntent();
             }
         });
     }
@@ -430,7 +446,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Delete" button, so delete the pet.
-                deletePet();
+                deleteProduct();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -451,7 +467,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     /**
      * Perform the deletion of the pet in the database.
      */
-    private void deletePet() {
+    private void deleteProduct() {
         // Only perform the delete if this is an existing pet.
         if (mCurrentProductUri != null) {
             // Call the ContentResolver to delete the pet at the given content URI.
@@ -496,12 +512,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         int multiplier = Integer.valueOf(stringMultiplier);
         String stringQuantity = mQuantityEditText.getText().toString();
         int quantity = Integer.valueOf(stringQuantity);
-        if (mCurrentProductUri != null && quantity> 0 && multiplier > 0) {
+        if (mCurrentProductUri != null && multiplier > 0) {
 
             quantity = quantity + multiplier;
-            if (quantity < 1) {
-                quantity = 0;
-            }
+
             stringQuantity = Integer.toString(quantity);
             mQuantityEditText.setText(stringQuantity);
         }
@@ -514,4 +528,53 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     public static void takePicture() {
 
     }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Log.e(LOG_TAG, "Failed to save image " + ex.toString());
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.weirdresonance.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+/*    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            ImageView pictureImage = (ImageView) findViewById(R.id.product_image);
+            pictureImage.setImageBitmap(imageBitmap);
+        }
+    }*/
 }

@@ -3,6 +3,7 @@ package com.weirdresonance.android.rocksguitarinventory;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import android.widget.TextView;
 import com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.InventoryEntry;
 
 import static com.weirdresonance.android.rocksguitarinventory.EditorActivity.sellProduct;
-import static com.weirdresonance.android.rocksguitarinventory.EditorActivity.takePicture;
 import static com.weirdresonance.android.rocksguitarinventory.R.id.product_image;
 
 
@@ -40,9 +40,19 @@ public class InventoryCursorAdapter extends CursorAdapter {
         TextView quantityTextView = (TextView) view.findViewById(R.id.product_quantity);
         Button sell = (Button) view.findViewById(R.id.sell_button);
 
+        //TODO: https://discussions.udacity.com/t/sell-button-issue/222243/25
+
+        int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryEntry.COLUMN_PRODUCT_QUANTITY));
+
         sell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryEntry.COLUMN_PRODUCT_QUANTITY));
+                if (quantity<0){
+                    Log.v("ProductCursorAdpter","You cannot have less than 1 product");
+                    return;
+                }
+                quantity--;
                 sellProduct();
             }
         });
