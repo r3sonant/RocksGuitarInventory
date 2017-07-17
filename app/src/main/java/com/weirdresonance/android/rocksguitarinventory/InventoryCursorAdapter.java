@@ -47,7 +47,10 @@ public class InventoryCursorAdapter extends CursorAdapter {
             }
         });
 
-        pictureImageView.setOnClickListener(new View.OnClickListener() {
+        Button takePicture = (Button) view.findViewById(R.id.takePicture);
+
+        takePicture.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 takePicture();
