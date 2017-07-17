@@ -132,6 +132,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 increaseQuantity();
             }
         });
+
+        Button takePicture = (Button) findViewById(R.id.takePicture);
+
+        takePicture.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                takePicture();
+            }
+        });
     }
 
     @Override

@@ -47,15 +47,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
             }
         });
 
-        Button takePicture = (Button) view.findViewById(R.id.takePicture);
 
-        takePicture.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                takePicture();
-            }
-        });
 
         int nameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_NAME);
         int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_PRICE);
