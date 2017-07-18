@@ -21,4 +21,5 @@
     <string name="cancel">Cancel</string>
     <string name="editor_product_deletion_failed">Deleting the product failed.</string>
     <string name="editor_product_deletion_successful">Deleting the product was successful.</string>
+    <string name="out_of_stock">Out of Stock!</string>
 </resources>

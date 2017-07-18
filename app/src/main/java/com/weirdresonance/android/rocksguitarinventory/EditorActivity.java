@@ -22,7 +22,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -32,8 +31,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static android.R.attr.name;
 
 /**
  * Created by Steev on 06/07/2017.
@@ -121,7 +118,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
 
         // Get all the views from the EditorActivity
-        // Get all the views from the EditorActivity
         mNameEditText = (EditText) findViewById(R.id.edit_product_name);
         mPriceEditText = (EditText) findViewById(R.id.edit_product_price);
         mQuantityEditText = (EditText) findViewById(R.id.edit_product_quantity);
@@ -139,6 +135,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 /*        String stringMultiplier = mStockMultiplier.getText().toString();
         final int multiplier = Integer.valueOf(stringMultiplier);*/
 
+        // Get the decrease button and then set an onclicklistener on it.
         Button decrease = (Button) findViewById(R.id.decrease);
 
         decrease.setOnClickListener(new Button.OnClickListener() {
@@ -148,6 +145,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
+        // Get the Increase button and then set an onclicklistener on it.
         Button increase = (Button) findViewById(R.id.increase);
 
         increase.setOnClickListener(new Button.OnClickListener() {
@@ -156,14 +154,23 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
-        // Get the picture button and then set an onclick listener on it.
+        // Get the picture button and then set an onclicklistener on it.
         Button takePicture = (Button) findViewById(R.id.takePicture);
 
         takePicture.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 dispatchTakePictureIntent();
+            }
+        });
+
+        // Get the Order button and then set an onlclicklistener on it.
+        Button order = (Button) findViewById(R.id.order);
+
+        order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitOrder();
             }
         });
     }
@@ -241,14 +248,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     @Override
     public void onBackPressed() {
-        // If the pet hasn't changed, continue with handling back button press
+        // If the product hasn't changed then allow the back button to go back to the previous screen.
         if (!mProductHasChanged) {
             super.onBackPressed();
             return;
         }
 
-        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
-        // Create a click listener to handle the user confirming that changes should be discarded.
+        // If the product has changed prompt the user to keep editing or discard their changes.
         DialogInterface.OnClickListener discardButtonClickListener =
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -258,7 +264,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     }
                 };
 
-        // Show dialog that there are unsaved changes
+        // Show dialog that there are unsaved changes.
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
@@ -284,6 +290,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(supplierString) && TextUtils.isEmpty(supplierEmailString)) {
             // Since no fields were modified, we can return early without creating a new pet.
             // No need to create ContentValues and no need to do any ContentProvider operations.
+            return;
+        }
+
+        if (mCurrentProductUri == null &&
+                (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(priceString) ||
+                        TextUtils.isEmpty(quantityString) || TextUtils.isEmpty(supplierString)
+                        || TextUtils.isEmpty(supplierEmailString))) {
             return;
         }
 
@@ -339,6 +352,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 Toast.makeText(this, getString(R.string.editor_product_update_successful),
                         Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    public final static boolean isValidEmail(CharSequence target) {
+        if (target == null) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
         }
     }
 
@@ -539,10 +560,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     }
 
-    public static void takePicture() {
-
-    }
-
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -592,61 +609,88 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }*/
 
-    /**
-     * Create Order Summary
-     * @param name users name
-     * @param price of the order
-     * @param addWhippedCream has whipped cream been added?
-     * @param hasChocolate has chocolate topping been added?
-     * @return summary of order
-     */
-
-    private String createOrderSummary(String name, int price, boolean addWhippedCream, boolean hasChocolate) {
-        String priceMessage = getString(R.string.order_summary_name, name);
-        priceMessage += "\n" + getString(R.string.whipped_cream) + addWhippedCream;
-        priceMessage += "\n" + getString(R.string.chocolate) + hasChocolate;
-        priceMessage += "\n" + getString(R.string.quantity) + quantity;
-        priceMessage += "\n" + getString(R.string.total) + "£" + price;
-        priceMessage += "\n" + getString(R.string.thank_you);
-        return priceMessage;
-    }
 
     /**
      * This method is called when the order button is clicked.
      */
-    public void submitOrder(View view) {
-        // Read the users name from the EditText view.
-        EditText name = (EditText)findViewById(R.id.nameEntry);
-        String userName = name.getText().toString();
+    public void submitOrder() {
 
-        // Check to see if whipped cream checkbox has been checked.
-        CheckBox whippedCreamCheckBox = (CheckBox) findViewById(R.id.whipped_cream_checkbox);
-        boolean hasWhippedCream = whippedCreamCheckBox.isChecked();
+        // If the pet hasn't changed, continue with handling back button press
+        if (!mProductHasChanged) {
+            String productName = mNameEditText.getText().toString();
+            String supplierName = mSupplierEditText.getText().toString();
+            String supplierEmail = mSupplierEmailEditText.getText().toString();
 
-        // Check to see if chocolate checkbox has been checked.
-        CheckBox chocolateCheckBox = (CheckBox) findViewById(R.id.chocolate_checkbox);
-        boolean hasChocolate = chocolateCheckBox.isChecked();
+            // Create the email content
+            String email = "mailto:"
+                    + supplierEmail
+                    + "?subject="
+                    + Uri.encode("New product order from Rocks Guitars for "
+                    + productName)
+                    + "&body="
+                    + Uri.encode("Rocks Guitars would like to place an order for more of the following product."
+                    + "\n\n"
+                    + "Product: "
+                    + productName
+                    + "\n\n"
+                    + "Quantity: (Please fill in)"
+                    + "\n\n"
+                    + "Thank you "
+                    + supplierName
+                    + "."
+                    + "\n\n"
+                    + "Rocks Guitars (orderrequest@rocksguitars.com)");
 
-        // Calculate the price by passing the quantity and extras to the calculatePrice method.
-        int price = calculatePrice(quantity, hasWhippedCream, hasChocolate);
+            // Create Intent to send email
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setType("message/rfc822");
+            intent.setData(Uri.parse(email)); // Only email apps should handle this.
 
-        // Create the email content
-        String email = "mailto: steev@weirdresonance.com"
-                + "?subject="
-                + Uri.encode("I would like these coffees please.")
-                + "&body="
-                + Uri.encode(createOrderSummary(userName, price, hasWhippedCream, hasChocolate));
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
+        } else {
+            // If the product has changed prompt the user to keep editing or discard their changes.
+            DialogInterface.OnClickListener discardButtonClickListener =
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // User clicked "Discard" button, close the current activity.
+                            finish();
+                        }
+                    };
 
-        // Create Intent to send email
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setType("*/*");
-        intent.setData(Uri.parse(email)); // Only email apps should handle this.
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
+            // Show dialog that there are unsaved changes.
+            showFieldsChangedOrderMore(discardButtonClickListener);
         }
+    }
 
-        // Removed code to display in app as sending email now.
-        //displayMessage(createOrderSummary(userName, price, hasWhippedCream, hasChocolate));
+    /**
+     * Show a dialog that warns the user there are unsaved changes that will be lost
+     * if they continue leaving the editor.
+     *
+     * @param discardButtonClickListener is the click listener for what to do when
+     *                                   the user confirms they want to discard their changes
+     */
+    private void showFieldsChangedOrderMore(DialogInterface.OnClickListener discardButtonClickListener) {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Changes have been made to the product. Please save before ordering more.");
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Keep editing" button, so dismiss the dialog
+                // and continue editing the pet.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
 }
