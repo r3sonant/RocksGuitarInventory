@@ -47,13 +47,13 @@ public class InventoryCursorAdapter extends CursorAdapter {
         sell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryEntry.COLUMN_PRODUCT_QUANTITY));
+/*                int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryEntry.COLUMN_PRODUCT_QUANTITY));
                 if (quantity<0){
                     Log.v("ProductCursorAdpter","You cannot have less than 1 product");
                     return;
                 }
-                quantity--;
-                sellProduct();
+                quantity--;*/
+                //sellProduct();
             }
         });
 

@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -31,6 +32,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static android.R.attr.name;
 
 /**
  * Created by Steev on 06/07/2017.
@@ -58,7 +61,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     /** Supplier EditText field. */
     private EditText mSupplierEditText;
 
-    /** Increase mulitplyer */
+    /** Supplier Email Edit*/
+    private EditText mSupplierEmailEditText;
+
+    /** Increase multiplier */
     private EditText mStockMultiplier;
 
     // TODO: Need to add the component to take and add the photo.
@@ -120,6 +126,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPriceEditText = (EditText) findViewById(R.id.edit_product_price);
         mQuantityEditText = (EditText) findViewById(R.id.edit_product_quantity);
         mSupplierEditText = (EditText) findViewById(R.id.edit_product_supplier);
+        mSupplierEmailEditText = (EditText) findViewById(R.id.edit_product_supplier_email);
         mStockMultiplier = (EditText) findViewById(R.id.multiplyer);
 
         // Set OnTouchListeners on all the fields so we know when the user interacts with them.
@@ -127,6 +134,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPriceEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
         mSupplierEditText.setOnTouchListener(mTouchListener);
+        mSupplierEmailEditText.setOnTouchListener(mTouchListener);
 
 /*        String stringMultiplier = mStockMultiplier.getText().toString();
         final int multiplier = Integer.valueOf(stringMultiplier);*/
@@ -266,14 +274,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String nameString = mNameEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
-        String supplierString = "Supplier";
-        //String supplierString = mSupplierEditText.getText().toString().trim();
+        String supplierString = mSupplierEditText.getText().toString().trim();
+        String supplierEmailString = mSupplierEmailEditText.getText().toString().trim();
 
         // Check if this is supposed to be a new pet
         // and check if all the fields in the editor are blank
         if (mCurrentProductUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(priceString) &&
-                TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(supplierString)) {
+                TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(supplierString) && TextUtils.isEmpty(supplierEmailString)) {
             // Since no fields were modified, we can return early without creating a new pet.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
@@ -287,6 +295,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(InventoryEntry.COLUMN_PRODUCT_PRICE, priceString);
         values.put(InventoryEntry.COLUMN_PRODUCT_QUANTITY, quantityString);
         values.put(InventoryEntry.COLUMN_PRODUCT_SUPPLIER, supplierString);
+        values.put(InventoryEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, supplierEmailString);
 
         // TODO: See if any of the fields can use data validation like this.
         // If the weight is not provided by the user, don't try to parse the string into an
@@ -342,7 +351,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 InventoryEntry.COLUMN_PRODUCT_NAME,
                 InventoryEntry.COLUMN_PRODUCT_PRICE,
                 InventoryEntry.COLUMN_PRODUCT_QUANTITY,
-                InventoryEntry.COLUMN_PRODUCT_SUPPLIER };
+                InventoryEntry.COLUMN_PRODUCT_SUPPLIER,
+                InventoryEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
@@ -368,18 +378,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_PRICE);
             int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_QUANTITY);
             int supplierColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_SUPPLIER);
+            int supplierEmailColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL);
 
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
             float price = cursor.getFloat(priceColumnIndex);
             int quantity = cursor.getInt(quantityColumnIndex);
             String supplier = cursor.getString(supplierColumnIndex);
+            String supplierEmail = cursor.getString(supplierEmailColumnIndex);
 
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
             mPriceEditText.setText(Float.toString(price));
             mQuantityEditText.setText(Integer.toString(quantity));
             mSupplierEditText.setText(supplier);
+            mSupplierEmailEditText.setText(supplierEmail);
 
             // Gender is a dropdown spinner, so map the constant value from the database
             // into one of the dropdown options (0 is Unknown, 1 is Male, 2 is Female).
@@ -404,7 +417,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mNameEditText.setText("");
         mPriceEditText.setText("");
         mQuantityEditText.setText("");
-        mSupplierEditText.setSelection(0); // Select "Unknown" gender
+        mSupplierEditText.setText(""); // Select "Unknown" gender
+        mSupplierEmailEditText.setText("");
     }
 
     /**
@@ -416,7 +430,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
         // Create an AlertDialog.Builder and set the message, and click listeners
-        // for the postivie and negative buttons on the dialog.
+        // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.unsaved_changes_dialog_msg);
         builder.setPositiveButton(R.string.discard, discardButtonClickListener);
@@ -440,7 +454,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     private void showDeleteConfirmationDialog() {
         // Create an AlertDialog.Builder and set the message, and click listeners
-        // for the postivie and negative buttons on the dialog.
+        // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_dialog_msg);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
@@ -577,4 +591,62 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             pictureImage.setImageBitmap(imageBitmap);
         }
     }*/
+
+    /**
+     * Create Order Summary
+     * @param name users name
+     * @param price of the order
+     * @param addWhippedCream has whipped cream been added?
+     * @param hasChocolate has chocolate topping been added?
+     * @return summary of order
+     */
+
+    private String createOrderSummary(String name, int price, boolean addWhippedCream, boolean hasChocolate) {
+        String priceMessage = getString(R.string.order_summary_name, name);
+        priceMessage += "\n" + getString(R.string.whipped_cream) + addWhippedCream;
+        priceMessage += "\n" + getString(R.string.chocolate) + hasChocolate;
+        priceMessage += "\n" + getString(R.string.quantity) + quantity;
+        priceMessage += "\n" + getString(R.string.total) + "£" + price;
+        priceMessage += "\n" + getString(R.string.thank_you);
+        return priceMessage;
+    }
+
+    /**
+     * This method is called when the order button is clicked.
+     */
+    public void submitOrder(View view) {
+        // Read the users name from the EditText view.
+        EditText name = (EditText)findViewById(R.id.nameEntry);
+        String userName = name.getText().toString();
+
+        // Check to see if whipped cream checkbox has been checked.
+        CheckBox whippedCreamCheckBox = (CheckBox) findViewById(R.id.whipped_cream_checkbox);
+        boolean hasWhippedCream = whippedCreamCheckBox.isChecked();
+
+        // Check to see if chocolate checkbox has been checked.
+        CheckBox chocolateCheckBox = (CheckBox) findViewById(R.id.chocolate_checkbox);
+        boolean hasChocolate = chocolateCheckBox.isChecked();
+
+        // Calculate the price by passing the quantity and extras to the calculatePrice method.
+        int price = calculatePrice(quantity, hasWhippedCream, hasChocolate);
+
+        // Create the email content
+        String email = "mailto: steev@weirdresonance.com"
+                + "?subject="
+                + Uri.encode("I would like these coffees please.")
+                + "&body="
+                + Uri.encode(createOrderSummary(userName, price, hasWhippedCream, hasChocolate));
+
+        // Create Intent to send email
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setType("*/*");
+        intent.setData(Uri.parse(email)); // Only email apps should handle this.
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+
+        // Removed code to display in app as sending email now.
+        //displayMessage(createOrderSummary(userName, price, hasWhippedCream, hasChocolate));
+    }
+
 }

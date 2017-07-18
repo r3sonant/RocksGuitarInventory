@@ -88,17 +88,24 @@ public final class InventoryContract {
          * Type: String
          */
         public static final String COLUMN_PRODUCT_SUPPLIER = "supplier";
+
+        /**
+         * Email address of the product supplier.
+         * <p>
+         * Type: String
+         */
+        public static final String COLUMN_PRODUCT_SUPPLIER_EMAIL = "email";
     }
 
     /**
      * URI matcher code for the content URI for the pets table
      */
-    private static final int PRODUCTS = 10;
+    private static final int PRODUCTS = 100;
 
     /**
      * URI matcher code for the content URI for a single pet in the pets table
      */
-    private static final int PRODUCT_ID = 11;
+    private static final int PRODUCT_ID = 101;
 
     /**
      * UriMatcher object to match the content URI to a corresponding code.

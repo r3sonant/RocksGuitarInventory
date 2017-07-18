@@ -29,10 +29,10 @@ public class InventoryProvider extends ContentProvider {
     private InventoryDbHelper mDbHelper;
 
     /** Matcher code for the content URI of the inventory table */
-    private static final int PRODUCTS = 10;
+    private static final int PRODUCTS = 100;
 
     /** Matcher code for the content URI for a single product in the inventory table */
-    private static final int PRODUCT_ID = 11;
+    private static final int PRODUCT_ID = 101;
 
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -151,6 +151,12 @@ public class InventoryProvider extends ContentProvider {
         String supplier = values.getAsString(InventoryEntry.COLUMN_PRODUCT_SUPPLIER);
         if (supplier == null) {
             throw new IllegalArgumentException("Product requires a valid supplier.");
+        }
+
+        // Check String supplier email isn't null.
+        String supplierEmail = values.getAsString(InventoryEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL);
+        if (supplierEmail == null) {
+            throw new IllegalArgumentException("Product requires a valid supplier email address.");
         }
 
 
@@ -275,6 +281,23 @@ public class InventoryProvider extends ContentProvider {
             }
         }
 
+        // If the {@link PetEntry#COLUMN_PET_NAME} key is present,
+        // check that the name value is not null.
+        if (values.containsKey(InventoryEntry.COLUMN_PRODUCT_SUPPLIER)) {
+            String supplier = values.getAsString(InventoryEntry.COLUMN_PRODUCT_SUPPLIER);
+            if (supplier == null) {
+                throw new IllegalArgumentException("You must enter a product supplier.");
+            }
+        }
+
+        // If the {@link PetEntry#COLUMN_PET_NAME} key is present,
+        // check that the name value is not null.
+        if (values.containsKey(InventoryEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL)) {
+            String supplierEmail = values.getAsString(InventoryEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL);
+            if (supplierEmail == null) {
+                throw new IllegalArgumentException("You must enter a product supplier email.");
+            }
+        }
 /*        // If the {@link PetEntry#COLUMN_PET_WEIGHT} key is present,
         // check that the weight value is valid.
         if (values.containsKey(InventoryEntry.COLUMN_PRODUCT_SUPPLIER)) {
