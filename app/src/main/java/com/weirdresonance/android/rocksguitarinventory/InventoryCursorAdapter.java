@@ -56,6 +56,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
 
         //TODO: https://discussions.udacity.com/t/sell-button-issue/222243/25
         // https://discussions.udacity.com/t/problem-with-sold-button/310478/13
+        // https://stackoverflow.com/questions/22442479/custom-cursoradapter-wrong-position/22444284#22444284
 
 
         //final int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryEntry.COLUMN_PRODUCT_QUANTITY));

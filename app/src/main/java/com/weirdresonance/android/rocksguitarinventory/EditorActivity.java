@@ -206,10 +206,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                // Save pet to database
-                saveProduct();
+                // Validate entries
+                validateEntries();
+/*                // Save pet to database
+                saveProduct();*/
                 // Exit activity
-                finish();
+                //finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
@@ -241,6 +243,45 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // Validates the entries entered in for the new item. Also validates if email address is of a valid format.
+    private void validateEntries() {
+        // Read from input fields
+        // Use trim to eliminate leading or trailing white space
+        String pictureString = "picture";
+        String nameString = mNameEditText.getText().toString().trim();
+        String priceString = mPriceEditText.getText().toString().trim();
+        String quantityString = mQuantityEditText.getText().toString().trim();
+        String supplierString = mSupplierEditText.getText().toString().trim();
+        String supplierEmailString = mSupplierEmailEditText.getText().toString().trim();
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        if (mCurrentProductUri == null &&
+                (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(priceString) ||
+                        TextUtils.isEmpty(quantityString) || TextUtils.isEmpty(supplierString)
+                        || TextUtils.isEmpty(supplierEmailString) || (!supplierEmailString.matches(emailPattern)))){
+            // Otherwise if there are unsaved changes, setup a dialog to warn the user.
+            // Create a click listener to handle the user confirming that
+            // changes should be discarded.
+            DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // User clicked "Discard" button, navigate to parent activity.
+                    NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                }
+            };
+
+            // Show a dialog that notifies the user they have unsaved changes
+            fillAllFieldsWarning(discardButtonClickListener);
+
+            return;
+        } else {
+            // Save pet to database
+            saveProduct();
+            finish();
+            return;
+        }
+
     }
 
     /**
@@ -677,6 +718,35 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Changes have been made to the product. Please save before ordering more.");
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Keep editing" button, so dismiss the dialog
+                // and continue editing the pet.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
+    /**
+     * Show a dialog that warns the user there are unsaved changes that will be lost
+     * if they continue leaving the editor.
+     *
+     * @param discardButtonClickListener is the click listener for what to do when
+     *                                   the user confirms they want to discard their changes
+     */
+    private void fillAllFieldsWarning(DialogInterface.OnClickListener discardButtonClickListener) {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Please fill in all fields and enter a valid email address before saving.");
         builder.setPositiveButton(R.string.discard, discardButtonClickListener);
         builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
