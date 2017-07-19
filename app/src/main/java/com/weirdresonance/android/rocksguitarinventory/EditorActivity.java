@@ -23,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.InventoryEntry;
@@ -72,6 +73,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private String mCurrentPhotoPath;
+
 
     /**
      * Listener to detect if the user has interacted with the view so we know they are modifying something.
@@ -136,7 +138,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         final int multiplier = Integer.valueOf(stringMultiplier);*/
 
         // Get the decrease button and then set an onclicklistener on it.
-        Button decrease = (Button) findViewById(R.id.decrease);
+        ImageButton decrease = (ImageButton) findViewById(R.id.decrease);
 
         decrease.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -146,7 +148,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         });
 
         // Get the Increase button and then set an onclicklistener on it.
-        Button increase = (Button) findViewById(R.id.increase);
+        ImageButton increase = (ImageButton) findViewById(R.id.increase);
 
         increase.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
@@ -155,12 +157,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         });
 
         // Get the picture button and then set an onclicklistener on it.
-        Button takePicture = (Button) findViewById(R.id.takePicture);
+        final ImageButton takePicture = (ImageButton) findViewById(R.id.takePicture);
 
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dispatchTakePictureIntent();
+
+
             }
         });
 
@@ -173,6 +177,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 submitOrder();
             }
         });
+
+/*        takePictureButton = (Button) findViewById(R.id.button_image);
+        imageView = (ImageView) findViewById(R.id.imageview);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            takePictureButton.setEnabled(false);
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+        }*/
     }
 
     @Override
@@ -456,20 +468,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mSupplierEditText.setText(supplier);
             mSupplierEmailEditText.setText(supplierEmail);
 
-            // Gender is a dropdown spinner, so map the constant value from the database
-            // into one of the dropdown options (0 is Unknown, 1 is Male, 2 is Female).
-            // Then call setSelection() so that option is displayed on screen as the current selection.
-/*            switch (gender) {
-                case PetEntry.GENDER_MALE:
-                    mGenderSpinner.setSelection(1);
-                    break;
-                case PetEntry.GENDER_FEMALE:
-                    mGenderSpinner.setSelection(2);
-                    break;
-                default:
-                    mGenderSpinner.setSelection(0);
-                    break;
-            }*/
         }
     }
 
@@ -597,25 +595,91 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
-    public static void sellProduct() {
 
+
+
+
+/*
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == 0) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                takePictureButton.setEnabled(true);
+            }
+        }
     }
+
+    public void takePicture(View view) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        file = Uri.fromFile(getOutputMediaFile());
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, file);
+
+        startActivityForResult(intent, 100);
+    }
+
+    private static File getOutputMediaFile(){
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "CameraDemo");
+
+        if (!mediaStorageDir.exists()){
+            if (!mediaStorageDir.mkdirs()){
+                Log.d("CameraDemo", "failed to create directory");
+                return null;
+            }
+        }
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        return new File(mediaStorageDir.getPath() + File.separator +
+                "IMG_"+ timeStamp + ".jpg");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 100) {
+            if (resultCode == RESULT_OK) {
+                imageView.setImageURI(file);
+            }
+        }
+    }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = "rgi_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                imageFileName,   //prefix
+                ".jpg",          //suffix
+                storageDir       //directory
         );
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
+/*    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "rgi_" + timeStamp + ".jpg";
+        File photo = new File(Environment.getExternalStorageDirectory(),  imageFileName);
+        return photo;
+    }*/
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -649,6 +713,23 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             pictureImage.setImageBitmap(imageBitmap);
         }
     }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /**

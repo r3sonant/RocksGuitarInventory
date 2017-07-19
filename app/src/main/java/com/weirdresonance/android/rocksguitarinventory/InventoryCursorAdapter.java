@@ -81,11 +81,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
 
                 if (inventoryQuantity > 0){
                     int newQuantity = inventoryQuantity - 1;
-/*                    values.put(InventoryEntry.COLUMN_PRODUCT_QUANTITY, newQuantity);
-                    values.put(InventoryEntry.COLUMN_PRODUCT_NAME, inventoryName);
-                    values.put(InventoryEntry.COLUMN_COLOUR, inventoryColour);
-                    values.put(InventoryEntry.COLUMN_PRICE, inventoryPrice);
-                    values.put(InventoryEntry.COLUMN_CATEGORY_IMAGE, inventoryCategory);*/
+                    values.put(InventoryEntry.COLUMN_PRODUCT_QUANTITY, newQuantity);
                     Uri newUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, newQuantity);
                     context.getContentResolver().update(
                             newUri,
