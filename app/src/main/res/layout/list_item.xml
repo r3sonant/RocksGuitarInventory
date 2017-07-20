@@ -12,6 +12,7 @@
         android:layout_height="wrap_content">
 
         <TextView
+            style="@style/ProductNameHeaderStyle"
             android:id="@+id/product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,7 +30,6 @@
             android:id="@+id/product_picture"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:layout_weight="1"
             android:src="@drawable/ic_image_black_24dp" />
 
         <LinearLayout
@@ -44,12 +44,14 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/ListViewLabelStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Quantity: " />
 
                 <TextView
                     android:id="@+id/product_quantity"
+                    style="@style/ListViewItemDetailsStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="55" />
@@ -62,11 +64,13 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/ListViewLabelStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Price: " />
 
                 <TextView
+                    style="@style/ListViewItemDetailsStyle"
                     android:id="@+id/product_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
