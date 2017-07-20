@@ -25,7 +25,6 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
 
     // TODO: Comments needed review below
     /** Database helper that will provide us access to the database */
-    //private PetDbHelper mDbHelper;
     private static final int PRODUCT_LOADER = 0;
 
     InventoryCursorAdapter mCursorAdapter;
@@ -113,18 +112,9 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_delete_everything) {
+            deleteAllProducts();
             return true;
-        }
-        switch (item.getItemId()) {
-            // Respond to a click on the "Insert dummy data" menu option
-            case R.id.action_settings:
-                //insertPet();
-                return true;
-            // Respond to a click on the "Delete all entries" menu option
-            case R.id.action_delete_everything:
-                deleteAllProducts();
-                return true;
         }
 
         return super.onOptionsItemSelected(item);
