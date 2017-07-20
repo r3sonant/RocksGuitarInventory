@@ -43,38 +43,45 @@ import static com.weirdresonance.android.rocksguitarinventory.R.id.orderMoreLayo
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String LOG_TAG = EditorActivity.class.getSimpleName();
-
-    /** Content URI for an existing product. This will be null if a new product. */
-    private Uri mCurrentProductUri;
-
-    /** Data loader identifier for the product. */
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    /**
+     * Data loader identifier for the product.
+     */
     private static final int EXISTING_PRODUCT_LOADER = 0;
-
-    /** Product name EditText field. */
+    /**
+     * Content URI for an existing product. This will be null if a new product.
+     */
+    private Uri mCurrentProductUri;
+    /**
+     * Product name EditText field.
+     */
     private EditText mNameEditText;
-
-    /** Price EditText field. */
+    /**
+     * Price EditText field.
+     */
     private EditText mPriceEditText;
-
-    /** Quantity EditText field. */
+    /**
+     * Quantity EditText field.
+     */
     private EditText mQuantityEditText;
-
-    /** Supplier EditText field. */
+    /**
+     * Supplier EditText field.
+     */
     private EditText mSupplierEditText;
-
-    /** Supplier Email Edit*/
+    /**
+     * Supplier Email Edit
+     */
     private EditText mSupplierEmailEditText;
 
-    /** Increase multiplier */
-    private EditText mStockMultiplier;
-
     // TODO: Need to add the component to take and add the photo.
-
-    /** Flag to track if a change has been made. */
+    /**
+     * Increase multiplier
+     */
+    private EditText mStockMultiplier;
+    /**
+     * Flag to track if a change has been made.
+     */
     private boolean mProductHasChanged = false;
-
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-
     private String mCurrentPhotoPath;
 
 
@@ -120,8 +127,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             incdDecLayout.setVisibility(View.VISIBLE);
             orderMoreButton.setVisibility(View.VISIBLE);
 
-            // Initialize a loader to read the pet data from the database
-            // and display the current values in the editor
+            // Initialize a loader to read from the database and display.
             getLoaderManager().initLoader(EXISTING_PRODUCT_LOADER, null, this);
         }
 
@@ -204,7 +210,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        // If this is a new pet, hide the "Delete" menu item.
+        // If new product hide delet option
         if (mCurrentProductUri == null) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
             menuItem.setVisible(false);
@@ -237,12 +243,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
                 // If there were changes then pop up a dialogue for discard or keep editing
                 DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // Discard tapped, go back to InventoryActivity.
-                                NavUtils.navigateUpFromSameTask(EditorActivity.this);
-                            }
-                        };
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Discard tapped, go back to InventoryActivity.
+                        NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                    }
+                };
 
                 // Show unsaved changes dialogue.
                 showUnsavedChangesDialog(discardButtonClickListener);
@@ -264,7 +270,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (mCurrentProductUri == null &&
                 (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(priceString) ||
                         TextUtils.isEmpty(quantityString) || TextUtils.isEmpty(supplierString)
-                        || TextUtils.isEmpty(supplierEmailString) || (!supplierEmailString.matches(emailPattern)))){
+                        || TextUtils.isEmpty(supplierEmailString) || (!supplierEmailString.matches(emailPattern)))) {
             // Warn of unsaved changes.
             DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
                 @Override
@@ -334,8 +340,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return;
         }
 
-        // Create a ContentValues object where column names are the keys,
-        // and pet attributes from the editor are the values.
+        // Create content objects.
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.COLUMN_PRODUCT_PICTURE, pictureString);
         values.put(InventoryEntry.COLUMN_PRODUCT_NAME, nameString);
@@ -344,63 +349,36 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(InventoryEntry.COLUMN_PRODUCT_SUPPLIER, supplierString);
         values.put(InventoryEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, supplierEmailString);
 
-        // TODO: See if any of the fields can use data validation like this.
-        // If the weight is not provided by the user, don't try to parse the string into an
-        // integer value. Use 0 by default.
-/*        int weight = 0;
-        if (!TextUtils.isEmpty(weightString)) {
-            weight = Integer.parseInt(weightString);
-        }
-        values.put(PetEntry.COLUMN_PET_WEIGHT, weight);*/
-
-        // Determine if this is a new or existing pet by checking if mCurrentPetUri is null or not
+        // Is this a new or existing product?
         if (mCurrentProductUri == null) {
-            // This is a NEW pet, so insert a new pet into the provider,
-            // returning the content URI for the new pet.
             Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
 
-            // Show a toast message depending on whether or not the insertion was successful.
+            // Show toast if successful or failed.
             if (newUri == null) {
-                // If the new content URI is null, then there was an error with insertion.
                 Toast.makeText(this, getString(R.string.editor_product_insert_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
-                // Otherwise, the insertion was successful and we can display a toast.
                 Toast.makeText(this, getString(R.string.editor_product_insert_successful),
                         Toast.LENGTH_SHORT).show();
             }
         } else {
-            // Otherwise this is an EXISTING pet, so update the pet with content URI: mCurrentPetUri
-            // and pass in the new ContentValues. Pass in null for the selection and selection args
-            // because mCurrentPetUri will already identify the correct row in the database that
-            // we want to modify.
+            // If not new then update the product.
             int rowsAffected = getContentResolver().update(mCurrentProductUri, values, null, null);
 
-            // Show a toast message depending on whether or not the update was successful.
+            // Show successful or failed toast.
             if (rowsAffected == 0) {
-                // If no rows were affected, then there was an error with the update.
                 Toast.makeText(this, getString(R.string.editor_product_update_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
-                // Otherwise, the update was successful and we can display a toast.
                 Toast.makeText(this, getString(R.string.editor_product_update_successful),
                         Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    public final static boolean isValidEmail(CharSequence target) {
-        if (target == null) {
-            return false;
-        } else {
-            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
-        }
-    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        // Since the editor shows all pet attributes, define a projection that contains
-        // all columns from the pet table
+        // Projection for all columns
         String[] projection = {
                 InventoryEntry._ID,
                 InventoryEntry.COLUMN_PRODUCT_NAME,
@@ -411,10 +389,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
-                mCurrentProductUri,         // Query the content URI for the current pet
-                projection,             // Columns to include in the resulting Cursor
-                null,                   // No selection clause
-                null,                   // No selection arguments
+                mCurrentProductUri,         // Query the content URI for the current product
+                projection,             // Columns to include in Cursor
+                null,                   // No clause
+                null,                   // No arguments
                 null);                  // Default sort order
     }
 
@@ -424,134 +402,102 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (cursor == null || cursor.getCount() < 1) {
             return;
         }
-
-        // Proceed with moving to the first row of the cursor and reading data from it
-        // (This should be the only row in the cursor)
+        // Move to first row of cursor and get the date from the columns we require.
         if (cursor.moveToFirst()) {
-            // Find the columns of pet attributes that we're interested in
             int nameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_NAME);
             int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_PRICE);
             int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_QUANTITY);
             int supplierColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_SUPPLIER);
             int supplierEmailColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL);
 
-            // Extract out the value from the Cursor for the given column index
+            // Extract the value from the Cursor column index
             String name = cursor.getString(nameColumnIndex);
             float price = cursor.getFloat(priceColumnIndex);
             int quantity = cursor.getInt(quantityColumnIndex);
             String supplier = cursor.getString(supplierColumnIndex);
             String supplierEmail = cursor.getString(supplierEmailColumnIndex);
 
-            // Update the views on the screen with the values from the database
+            // Update views on the screen with values from DB.
             mNameEditText.setText(name);
             mPriceEditText.setText(Float.toString(price));
             mQuantityEditText.setText(Integer.toString(quantity));
             mSupplierEditText.setText(supplier);
             mSupplierEmailEditText.setText(supplierEmail);
-
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        // If the loader is invalidated, clear out all the data from the input fields.
+        // Clear all data from input fields
         mNameEditText.setText("");
         mPriceEditText.setText("");
         mQuantityEditText.setText("");
-        mSupplierEditText.setText(""); // Select "Unknown" gender
+        mSupplierEditText.setText("");
         mSupplierEmailEditText.setText("");
     }
 
-    /**
-     * Show a dialog that warns the user there are unsaved changes that will be lost
-     * if they continue leaving the editor.
-     *
-     * @param discardButtonClickListener is the click listener for what to do when
-     *                                   the user confirms they want to discard their changes
-     */
+    // Alert for unsaved changes with discard or keep editing.
     private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
-        // Create an AlertDialog.Builder and set the message, and click listeners
-        // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.unsaved_changes_dialog_msg);
         builder.setPositiveButton(R.string.discard, discardButtonClickListener);
         builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Keep editing" button, so dismiss the dialog
-                // and continue editing the pet.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
             }
         });
 
-        // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
-    /**
-     * Prompt the user to confirm that they want to delete this pet.
-     */
+    // Prompt for deltion
     private void showDeleteConfirmationDialog() {
-        // Create an AlertDialog.Builder and set the message, and click listeners
-        // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_dialog_msg);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Delete" button, so delete the pet.
                 deleteProduct();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Cancel" button, so dismiss the dialog
-                // and continue editing the pet.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
             }
         });
 
-        // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
-    /**
-     * Perform the deletion of the pet in the database.
-     */
+    // Delete the product from the DB.
     private void deleteProduct() {
-        // Only perform the delete if this is an existing pet.
         if (mCurrentProductUri != null) {
-            // Call the ContentResolver to delete the pet at the given content URI.
-            // Pass in null for the selection and selection args because the mCurrentPetUri
-            // content URI already identifies the pet that we want.
             int rowsDeleted = getContentResolver().delete(mCurrentProductUri, null, null);
 
-            // Show a toast message depending on whether or not the delete was successful.
+            // Show sucessfull or failed delete.
             if (rowsDeleted == 0) {
-                // If no rows were deleted, then there was an error with the delete.
                 Toast.makeText(this, getString(R.string.editor_product_deletion_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
-                // Otherwise, the delete was successful and we can display a toast.
                 Toast.makeText(this, getString(R.string.editor_product_deletion_successful),
                         Toast.LENGTH_SHORT).show();
             }
         }
-
-        // Close the activity
         finish();
     }
 
+    // Decrease the quantity if the decrease quantity button is pressed.
     public void decreaseQuantity() {
         String stringMultiplier = mStockMultiplier.getText().toString();
         int multiplier = Integer.valueOf(stringMultiplier);
         String stringQuantity = mQuantityEditText.getText().toString();
         int quantity = Integer.valueOf(stringQuantity);
-        if (mCurrentProductUri != null && quantity> 0 && multiplier > 0) {
+        if (mCurrentProductUri != null && quantity > 0 && multiplier > 0) {
 
             quantity = quantity - multiplier;
             if (quantity < 1) {
@@ -562,6 +508,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
+    // Increase the quantity if the increase button is pressed.
     private void increaseQuantity() {
         String stringMultiplier = mStockMultiplier.getText().toString();
         int multiplier = Integer.valueOf(stringMultiplier);
@@ -625,20 +572,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }*/
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -696,29 +629,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }*/
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * This method is called when the order button is clicked.
-     */
+    // Create an intent and open an email client on the device passing in values from the DB for
+    // the order.
     public void submitOrder() {
 
-        // If the pet hasn't changed, continue with handling back button press
+        // If the product hasn't changed then create the email.
         if (!mProductHasChanged) {
             String productName = mNameEditText.getText().toString();
             String supplierName = mSupplierEditText.getText().toString();
@@ -768,59 +683,36 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
-    /**
-     * Show a dialog that warns the user there are unsaved changes that will be lost
-     * if they continue leaving the editor.
-     *
-     * @param discardButtonClickListener is the click listener for what to do when
-     *                                   the user confirms they want to discard their changes
-     */
+    // Warn if unsaved changes.
     private void showFieldsChangedOrderMore(DialogInterface.OnClickListener discardButtonClickListener) {
-        // Create an AlertDialog.Builder and set the message, and click listeners
-        // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Changes have been made to the product. Please save before ordering more.");
         builder.setPositiveButton(R.string.discard, discardButtonClickListener);
         builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Keep editing" button, so dismiss the dialog
-                // and continue editing the pet.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
             }
         });
 
-        // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
-
-    /**
-     * Show a dialog that warns the user there are unsaved changes that will be lost
-     * if they continue leaving the editor.
-     *
-     * @param discardButtonClickListener is the click listener for what to do when
-     *                                   the user confirms they want to discard their changes
-     */
+    // Warn the user they must fill in all fields before proceeding.
     private void fillAllFieldsWarning(DialogInterface.OnClickListener discardButtonClickListener) {
-        // Create an AlertDialog.Builder and set the message, and click listeners
-        // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Please fill in all fields and enter a valid email address before saving.");
         builder.setPositiveButton(R.string.discard, discardButtonClickListener);
         builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Keep editing" button, so dismiss the dialog
-                // and continue editing the pet.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
             }
         });
 
-        // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }

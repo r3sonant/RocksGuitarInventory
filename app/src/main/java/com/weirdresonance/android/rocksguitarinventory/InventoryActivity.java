@@ -23,8 +23,7 @@ import com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.In
 
 public class InventoryActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    // TODO: Comments needed review below
-    /** Database helper that will provide us access to the database */
+    // DB helper.
     private static final int PRODUCT_LOADER = 0;
 
     InventoryCursorAdapter mCursorAdapter;
@@ -40,27 +39,19 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-/*                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
                 Intent intent = new Intent(InventoryActivity.this, EditorActivity.class);
                 startActivity(intent);
             }
         });
 
-        // TODO: Update comments here for the items below.
-        // To access our database, we instantiate our subclass of SQLiteOpenHelper
-        // and pass the context, which is the current activity.
-        //mDbHelper = new PetDbHelper(this);
-
-
-        // Find the ListView which will be populated with the pet data
+        // Get the product listview.
         ListView productListView = (ListView) findViewById(R.id.product_list);
 
-        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
+        // Set empty view to show when DB is empty.
         View emptyView = findViewById(R.id.empty_view);
         productListView.setEmptyView(emptyView);
 
-        // Setup an adapter to create a list item for each row of pet data in the DB.
+        // Adapter to create list items for each entry.
         mCursorAdapter = new InventoryCursorAdapter(this, null);
         productListView.setAdapter(mCursorAdapter);
 
@@ -68,20 +59,15 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         productListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                // Create new intent to go to {@link EditorActivity}
+                // Create intent
                 Intent intent = new Intent(InventoryActivity.this, EditorActivity.class);
 
-                // Form the content URI that represents the specific pet that was clicked on,
-                // by appending the "id" (passed as input to this method) onto the
-                // {@link PetEntry#CONTENT_URI}.
-                // For example, the URI would be "content://com.example.android.pets/pets/2"
-                // if the pet with ID 2 was clicked on.
+                // Create URI for the product that was clicked on.
                 Uri currentProductUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, id);
 
-                // Set the URI on the data field of the intent
+                // Set URI for the field of the intent
                 intent.setData(currentProductUri);
 
-                // Launch the {@link EditorActivity} to display the data for the current pet.
                 startActivity(intent);
             }
         });
@@ -97,21 +83,19 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         getLoaderManager().initLoader(PRODUCT_LOADER, null, this);
     }
 
+    // Inflate the options menu.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_inventory, menu);
         return true;
     }
 
+    // Action bar handler.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete_everything) {
             deleteAllProducts();
             return true;
@@ -120,21 +104,23 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         return super.onOptionsItemSelected(item);
     }
 
+    // onCreate cursor loader.
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        // Define a projection that specifies the columns from the table we care about.
+
+        // Projection for relevant table columns.
         String[] projection = {
                 InventoryEntry._ID,
                 InventoryEntry.COLUMN_PRODUCT_NAME,
                 InventoryEntry.COLUMN_PRODUCT_PRICE,
                 InventoryEntry.COLUMN_PRODUCT_QUANTITY};
 
-        // This loader will execute the ContentProvider's query method on a background thread
+        // Loader to execute ContentProvider query in background thread.
         return new CursorLoader(this,   // Parent activity context
-                InventoryEntry.CONTENT_URI,   // Provider content URI to query
-                projection,             // Columns to include in the resulting Cursor
-                null,                   // No selection clause
-                null,                   // No selection arguments
+                InventoryEntry.CONTENT_URI,   // Content URI
+                projection,             // Included columns.
+                null,                   // No clause
+                null,                   // No arguments
                 null);                  // Default sort order
     }
 
@@ -148,7 +134,7 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
         mCursorAdapter.swapCursor(null);
     }
 
-    /** Perform the deletion of all pets in the database **/
+    // Beware, deletes all products...
     private void deleteAllProducts() {
         int rowsDeleted = getContentResolver().delete(InventoryEntry.CONTENT_URI, null, null);
         Log.v("CatalogActivity", rowsDeleted + " rows deleted from product database");
