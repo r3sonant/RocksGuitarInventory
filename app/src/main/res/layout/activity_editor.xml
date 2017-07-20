@@ -21,8 +21,8 @@
 
         <!-- Name field -->
         <EditText
-            style="@style/EditTextStyle"
             android:id="@+id/edit_product_name"
+            style="@style/EditTextStyle"
             android:hint="Product Name"
             android:inputType="textCapWords" />
 
@@ -38,15 +38,14 @@
         <!-- Label -->
         <TextView
             style="@style/LabelStyle"
-
             android:text="Price" />
 
-            <!-- Price field -->
-            <EditText
-                style="@style/EditTextStyle"
-                android:id="@+id/edit_product_price"
-                android:hint="Price"
-                android:inputType="numberDecimal" />
+        <!-- Price field -->
+        <EditText
+            android:id="@+id/edit_product_price"
+            style="@style/EditTextStyle"
+            android:hint="Price"
+            android:inputType="numberDecimal" />
 
     </LinearLayout>
 
@@ -62,12 +61,12 @@
             style="@style/LabelStyle"
             android:text="Quantity" />
 
-            <!-- Price field -->
-            <EditText
-                style="@style/EditTextStyle"
-                android:id="@+id/edit_product_quantity"
-                android:hint="Quantity"
-                android:inputType="number" />
+        <!-- Price field -->
+        <EditText
+            android:id="@+id/edit_product_quantity"
+            style="@style/EditTextStyle"
+            android:hint="Quantity"
+            android:inputType="number" />
 
     </LinearLayout>
 
@@ -84,8 +83,8 @@
 
         <!-- Supplier field -->
         <EditText
-            style="@style/EditTextStyle"
             android:id="@+id/edit_product_supplier"
+            style="@style/EditTextStyle"
             android:hint="Supplier"
             android:inputType="textCapWords" />
 
@@ -104,97 +103,117 @@
 
         <!-- Supplier field -->
         <EditText
-            style="@style/EditTextStyle"
             android:id="@+id/edit_product_supplier_email"
+            style="@style/EditTextStyle"
             android:hint="SupplierEmail"
             android:inputType="textCapWords" />
 
     </LinearLayout>
 
+    <!-- Layout to hold the icrement / decrement edittext, label and buttons. Hidden in create product -->
     <LinearLayout
-        android:id="@+id/image_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/incDecLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/takePicture"
+        <!-- Increment / Decrement multipier label view -->
+        <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_camera_alt_black_24dp" />
+            android:text="Inc/Dec Quantity by:"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
-        <ImageView
-            android:id="@+id/product_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <!-- Button Panel - This is hidden on the add product view but visible on the edit view -->
-    <LinearLayout
-        android:id="@+id/buttonPanel"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <LinearLayout
+        <!-- Increment / Decrement multiplier -->
+        <EditText
+            android:id="@+id/multiplyer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:inputType="number"
+            android:text="1" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Inc/Dec Quantity by:"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"/>
-
-            <EditText
-                android:id="@+id/multiplyer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:text="1" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageButton
-                    android:id="@+id/decrease"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/increase"
-                    android:focusable="false"
-                    android:text="Decrease"
-                    android:src="@drawable/ic_remove_black_24dp"/>
-
-                <ImageButton
-                    android:id="@+id/increase"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:focusable="false"
-                    android:text="Increase"
-                    android:src="@drawable/ic_add_black_24dp"/>
-
-            </RelativeLayout>
-
-        </LinearLayout>
-
-
-
+        <!-- Order more buttons -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/order"
-                android:layout_width="match_parent"
+            <!-- Decrease quantity button -->
+            <ImageButton
+                android:id="@+id/decrease"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_toLeftOf="@+id/increase"
                 android:focusable="false"
-                android:text="Order More" />
+                android:src="@drawable/ic_remove_black_24dp"
+                android:text="Decrease" />
+
+            <!-- Increase quantity button -->
+            <ImageButton
+                android:id="@+id/increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:focusable="false"
+                android:src="@drawable/ic_add_black_24dp"
+                android:text="Increase" />
+
         </RelativeLayout>
 
     </LinearLayout>
+
+
+    <!-- Layout for the camera button and imageView -->
+    <LinearLayout
+        android:id="@+id/cameraImageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Take picture button -->
+        <RelativeLayout
+            android:id="@+id/takePictureLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/takePicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_camera_alt_black_24dp" />
+
+        </RelativeLayout>
+
+        <!-- Product image layout -->
+        <RelativeLayout
+            android:id="@+id/productImageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/product_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!-- Order More button -->
+    <RelativeLayout
+        android:id="@+id/orderMoreLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:focusable="false"
+            android:text="Order More" />
+    </RelativeLayout>
+
 
 </LinearLayout>

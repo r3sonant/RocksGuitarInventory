@@ -33,6 +33,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.weirdresonance.android.rocksguitarinventory.R.id.cameraImageLayout;
+import static com.weirdresonance.android.rocksguitarinventory.R.id.incDecLayout;
+import static com.weirdresonance.android.rocksguitarinventory.R.id.orderMoreLayout;
+
 /**
  * Created by Steev on 06/07/2017.
  */
@@ -95,15 +99,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         Intent intent = getIntent();
         mCurrentProductUri = intent.getData();
 
-        // Get the buttonPanel view ID.
-        View buttonPanel = (findViewById(R.id.buttonPanel));
+        // Get the views to be hidden ID's.
+        View incdDecLayout = (findViewById(incDecLayout));
+        View orderMoreButton = (findViewById(orderMoreLayout));
 
         // If the intent was called by clicking the Add Product button then show New Product as the title.
         if (mCurrentProductUri == null) {
             setTitle(getString(R.string.new_product));
 
             // Hide the decrease, increase and order buttons as they aren't needed when creating a new product.
-            buttonPanel.setVisibility(View.GONE);
+            incdDecLayout.setVisibility(View.GONE);
+            orderMoreButton.setVisibility(View.GONE);
 
             // Hide the options menu. It will be redrawn later to show the done / save tick.
             invalidateOptionsMenu();
@@ -112,7 +118,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             setTitle(getString(R.string.edit_product));
 
             // Make the buttonPanel visible.
-            buttonPanel.setVisibility(View.VISIBLE);
+            incdDecLayout.setVisibility(View.VISIBLE);
+            orderMoreButton.setVisibility(View.VISIBLE);
 
             // Initialize a loader to read the pet data from the database
             // and display the current values in the editor

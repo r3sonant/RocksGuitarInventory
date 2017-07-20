@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <!-- List item view -->
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
-            style="@style/EditTextStyle"
             android:id="@+id/product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Product Name"/>
+            android:layout_centerHorizontal="true"
+            tools:text="Product Name" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,15 +28,17 @@
         <ImageView
             android:id="@+id/product_picture"
             android:layout_width="96dp"
-            android:layout_height="96dp" />
+            android:layout_height="96dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_image_black_24dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:orientation="vertical">
 
             <LinearLayout
-                style="@style/LabelStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -44,47 +46,45 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Quantity: "/>
+                    android:text="Quantity: " />
+
                 <TextView
                     android:id="@+id/product_quantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="55"/>
+                    tools:text="55" />
 
             </LinearLayout>
 
             <LinearLayout
-                style="@style/LabelStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Price: "/>
+                    android:text="Price: " />
 
                 <TextView
                     android:id="@+id/product_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="£5.55"/>
+                    tools:text="£5.55" />
 
             </LinearLayout>
-
 
         </LinearLayout>
 
         <Button
-            style="@style/LabelStyle"
             android:id="@+id/sell_button"
-            android:layout_width="wrap_content"
+            android:layout_width="24dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:focusable="false"
-            android:text="@string/sale"/>
+            android:text="@string/sale" />
 
     </LinearLayout>
-
 
 
 </LinearLayout>
