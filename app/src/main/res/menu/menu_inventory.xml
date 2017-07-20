@@ -2,15 +2,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.weirdresonance.android.rocksguitarinventory.InventoryActivity">
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="Edit Suppliers"
-        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_delete_everything"
         android:orderInCategory="100"
-        android:title="Delete Everything"
+        android:title="@string/delete_everything"
         app:showAsAction="never" />
 </menu>

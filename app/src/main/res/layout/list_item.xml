@@ -7,88 +7,114 @@
 
     <!-- List item view -->
 
+    <!-- Product Name header -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
-            style="@style/ProductNameHeaderStyle"
             android:id="@+id/product_name"
+            style="@style/ProductNameHeaderStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            tools:text="Product Name" />
+            tools:text="@string/product_name" />
 
     </RelativeLayout>
 
+    <!-- Linear layout for image, price, quantity and sell button -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/product_picture"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:src="@drawable/ic_image_black_24dp" />
-
+        <!-- Image Layout -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <!-- Product picture -->
+            <ImageView
+                android:id="@+id/product_picture"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:src="@drawable/ic_image_black_24dp" />
+
+        </LinearLayout>
+
+        <!-- Product details layout -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
+            <!-- Product price and quantity label layout -->
+
+            <!-- Label layout -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
                 <TextView
                     style="@style/ListViewLabelStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Quantity: " />
+                    android:text="@string/price_pounds" />
+
+                <TextView
+                    style="@style/ListViewLabelStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/quantity_colon" />
+
+            </LinearLayout>
+
+            <!-- Amounts layout -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/product_quantity"
                     style="@style/ListViewItemDetailsStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="55" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    android:layout_height="wrap_content" />
 
                 <TextView
-                    style="@style/ListViewLabelStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Price: " />
-
-                <TextView
-                    style="@style/ListViewItemDetailsStyle"
                     android:id="@+id/product_price"
+                    style="@style/ListViewItemDetailsStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="£5.55" />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/sell_button"
-            android:layout_width="24dp"
+        <!-- Sell button layout -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:focusable="false"
-            android:text="@string/sale" />
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/sell_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:focusable="false"
+                android:paddingTop="16dp"
+                android:text="@string/sale" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
-
 
 </LinearLayout>

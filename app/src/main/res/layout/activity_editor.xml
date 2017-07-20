@@ -17,13 +17,13 @@
         <!-- Name Field Label -->
         <TextView
             style="@style/LabelStyle"
-            android:text="Product Name" />
+            android:text="@string/productName_colon" />
 
         <!-- Name field -->
         <EditText
             android:id="@+id/edit_product_name"
             style="@style/EditTextStyle"
-            android:hint="Product Name"
+            android:hint="@string/product_name"
             android:inputType="textCapWords" />
 
     </LinearLayout>
@@ -38,13 +38,13 @@
         <!-- Label -->
         <TextView
             style="@style/LabelStyle"
-            android:text="Price" />
+            android:text="@string/price_pounds" />
 
         <!-- Price field -->
         <EditText
             android:id="@+id/edit_product_price"
             style="@style/EditTextStyle"
-            android:hint="Price"
+            android:hint="@string/price"
             android:inputType="numberDecimal" />
 
     </LinearLayout>
@@ -59,13 +59,13 @@
         <!-- Label -->
         <TextView
             style="@style/LabelStyle"
-            android:text="Quantity" />
+            android:text="@string/quantity_colon" />
 
         <!-- Price field -->
         <EditText
             android:id="@+id/edit_product_quantity"
             style="@style/EditTextStyle"
-            android:hint="Quantity"
+            android:hint="@string/quantity"
             android:inputType="number" />
 
     </LinearLayout>
@@ -79,13 +79,13 @@
         <!-- Supplier Field Label -->
         <TextView
             style="@style/LabelStyle"
-            android:text="Supplier" />
+            android:text="@string/supplier_colon" />
 
         <!-- Supplier field -->
         <EditText
             android:id="@+id/edit_product_supplier"
             style="@style/EditTextStyle"
-            android:hint="Supplier"
+            android:hint="@string/supplier"
             android:inputType="textCapWords" />
 
     </LinearLayout>
@@ -99,13 +99,13 @@
         <!-- Supplier Field Label -->
         <TextView
             style="@style/LabelStyle"
-            android:text="Supplier Email" />
+            android:text="@string/supplier_email_colon" />
 
         <!-- Supplier field -->
         <EditText
             android:id="@+id/edit_product_supplier_email"
             style="@style/EditTextStyle"
-            android:hint="SupplierEmail"
+            android:hint="@string/supplieremail"
             android:inputType="textCapWords" />
 
     </LinearLayout>
@@ -120,45 +120,53 @@
         <!-- Increment / Decrement multipier label view -->
         <TextView
             android:id="@+id/textView"
-            android:layout_width="wrap_content"
+            style="@style/LabelStyle"
             android:layout_height="wrap_content"
-            android:text="Inc/Dec Quantity by:"
+            android:text="@string/qunatity_x"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
-        <!-- Increment / Decrement multiplier -->
-        <EditText
-            android:id="@+id/multiplyer"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:text="1" />
+            android:layout_weight="2"
+            android:orientation="horizontal">
 
-        <!-- Order more buttons -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <!-- Decrease quantity button -->
-            <ImageButton
-                android:id="@+id/decrease"
+            <!-- Increment / Decrement multiplier -->
+            <EditText
+                android:id="@+id/multiplyer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/increase"
-                android:focusable="false"
-                android:src="@drawable/ic_remove_black_24dp"
-                android:text="Decrease" />
+                android:inputType="number"
+                android:text="@string/_1" />
 
-            <!-- Increase quantity button -->
-            <ImageButton
-                android:id="@+id/increase"
+            <!-- Order more buttons -->
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:focusable="false"
-                android:src="@drawable/ic_add_black_24dp"
-                android:text="Increase" />
+                android:layout_height="wrap_content">
 
-        </RelativeLayout>
+
+                <!-- Decrease quantity button -->
+                <ImageButton
+                    android:id="@+id/decrease"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/increase"
+                    android:focusable="false"
+                    android:src="@drawable/ic_remove_black_24dp" />
+
+                <!-- Increase quantity button -->
+                <ImageButton
+                    android:id="@+id/increase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:focusable="false"
+                    android:src="@drawable/ic_add_black_24dp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
@@ -212,7 +220,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:focusable="false"
-            android:text="Order More" />
+            android:text="@string/order_more" />
     </RelativeLayout>
 
 

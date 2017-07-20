@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.weirdresonance.android.rocksguitarinventory.R.id.cameraImageLayout;
 import static com.weirdresonance.android.rocksguitarinventory.R.id.incDecLayout;
 import static com.weirdresonance.android.rocksguitarinventory.R.id.orderMoreLayout;
 
@@ -196,16 +195,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu options from the res/menu/menu_editor.xml file.
-        // This adds menu items to the app bar.
+        // Inflate the menu options
         getMenuInflater().inflate(R.menu.menu_editor, menu);
         return true;
     }
 
-    /**
-     * This method is called after invalidateOptionsMenu(), so that the
-     * menu can be updated (some menu items can be hidden or made visible).
-     */
+    // Called to hide and show some menu options depending on the acivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -217,8 +212,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         return true;
     }
 
-
-    // TODO: Add my own comments to this code.
+    // What to do when an option is selected in the menu.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // User clicked on a menu option in the app bar overflow menu
@@ -227,37 +221,30 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             case R.id.action_save:
                 // Validate entries
                 validateEntries();
-/*                // Save pet to database
-                saveProduct();*/
-                // Exit activity
-                //finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
-                // Pop up confirmation dialog for deletion
+                // Pop up delete confirmation dialogue.
                 showDeleteConfirmationDialog();
                 return true;
-            // Respond to a click on the "Up" arrow button in the app bar
+            // Go back if up pressed.
             case android.R.id.home:
-                // If the pet hasn't changed, continue with navigating up to parent activity
-                // which is the {@link CatalogActivity}.
+                // If no changes then go up.
                 if (!mProductHasChanged) {
                     NavUtils.navigateUpFromSameTask(EditorActivity.this);
                     return true;
                 }
 
-                // Otherwise if there are unsaved changes, setup a dialog to warn the user.
-                // Create a click listener to handle the user confirming that
-                // changes should be discarded.
+                // If there were changes then pop up a dialogue for discard or keep editing
                 DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                // User clicked "Discard" button, navigate to parent activity.
+                                // Discard tapped, go back to InventoryActivity.
                                 NavUtils.navigateUpFromSameTask(EditorActivity.this);
                             }
                         };
 
-                // Show a dialog that notifies the user they have unsaved changes
+                // Show unsaved changes dialogue.
                 showUnsavedChangesDialog(discardButtonClickListener);
                 return true;
         }
@@ -266,8 +253,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     // Validates the entries entered in for the new item. Also validates if email address is of a valid format.
     private void validateEntries() {
-        // Read from input fields
-        // Use trim to eliminate leading or trailing white space
+        // Read from input fields and trim input.
         String pictureString = "picture";
         String nameString = mNameEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
@@ -279,23 +265,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(priceString) ||
                         TextUtils.isEmpty(quantityString) || TextUtils.isEmpty(supplierString)
                         || TextUtils.isEmpty(supplierEmailString) || (!supplierEmailString.matches(emailPattern)))){
-            // Otherwise if there are unsaved changes, setup a dialog to warn the user.
-            // Create a click listener to handle the user confirming that
-            // changes should be discarded.
+            // Warn of unsaved changes.
             DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    // User clicked "Discard" button, navigate to parent activity.
                     NavUtils.navigateUpFromSameTask(EditorActivity.this);
                 }
             };
 
-            // Show a dialog that notifies the user they have unsaved changes
             fillAllFieldsWarning(discardButtonClickListener);
 
             return;
         } else {
-            // Save pet to database
+            // Save the product in the DB.
             saveProduct();
             finish();
             return;
@@ -304,38 +286,33 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     /**
-     * This method is called when the back button is pressed.
+     * Called on up button tap.
      */
     @Override
     public void onBackPressed() {
-        // If the product hasn't changed then allow the back button to go back to the previous screen.
+        // If no change then proceed.
         if (!mProductHasChanged) {
             super.onBackPressed();
             return;
         }
 
-        // If the product has changed prompt the user to keep editing or discard their changes.
+        // Warn of changes and prompt for keep editing or discard.
         DialogInterface.OnClickListener discardButtonClickListener =
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // User clicked "Discard" button, close the current activity.
                         finish();
                     }
                 };
 
-        // Show dialog that there are unsaved changes.
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
-
-    // TODO: Add my own comments to this code.
     /**
-     * Get user input from editor and save pet into database.
+     * Get the input and save to the DB.
      */
     private void saveProduct() {
-        // Read from input fields
-        // Use trim to eliminate leading or trailing white space
+        // Read the input fields and trim them.
         String pictureString = "picture";
         String nameString = mNameEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
@@ -343,13 +320,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String supplierString = mSupplierEditText.getText().toString().trim();
         String supplierEmailString = mSupplierEmailEditText.getText().toString().trim();
 
-        // Check if this is supposed to be a new pet
-        // and check if all the fields in the editor are blank
+        // If all fields are empty return.
         if (mCurrentProductUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(priceString) &&
                 TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(supplierString) && TextUtils.isEmpty(supplierEmailString)) {
-            // Since no fields were modified, we can return early without creating a new pet.
-            // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
         }
 

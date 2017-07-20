@@ -159,16 +159,6 @@ public class InventoryProvider extends ContentProvider {
             throw new IllegalArgumentException("Product requires a valid supplier email address.");
         }
 
-
-        // TODO: Add some error checking if a value isn't mandatory.
-/*        // If the weight is provided, check that it's greater than or equal to 0 kg
-        Integer weight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
-
-        if (weight != null && weight < 0) {
-            throw new IllegalArgumentException("Pet requires valid weight");
-        }*/
-
-
         // Get a writable instance of the database.
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -183,7 +173,7 @@ public class InventoryProvider extends ContentProvider {
             return null;
         }
 
-        // Notify all listeners that the data has changed for the pet content URI.
+        // Notify all listeners that the data has changed for the product content URI.
         getContext().getContentResolver().notifyChange(uri, null);
 
         // Return the new URI with the ID (of the newly inserted row) appended to the end.
@@ -234,9 +224,7 @@ public class InventoryProvider extends ContentProvider {
             case PRODUCTS:
                 return updateProduct(uri, values, selection, selectionArgs);
             case PRODUCT_ID:
-                // For the PET_ID code, extract out the ID from the URI,
-                // so we know which row to update. Selection will be "_id=?" and selection
-                // arguments will be a String array containing the actual ID.
+                // Extracts the row to be updated based on the _ID.
                 selection = InventoryEntry._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
                 return updateProduct(uri, values, selection, selectionArgs);
@@ -246,15 +234,11 @@ public class InventoryProvider extends ContentProvider {
     }
 
 
-    //TODO: Clean up comments here.
-    /**
-     * Update pets in the database with the given content values. Apply the changes to the rows
-     * specified in the selection and selection arguments (which could be 0 or 1 or more pets).
-     * Return the number of rows that were successfully updated.
-     */
+    // Update the specified row with the data supplied.
     private int updateProduct(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        // If the {@link PetEntry#COLUMN_PET_NAME} key is present,
-        // check that the name value is not null.
+
+        // Error checking.
+
         if (values.containsKey(InventoryEntry.COLUMN_PRODUCT_NAME)) {
             String name = values.getAsString(InventoryEntry.COLUMN_PRODUCT_NAME);
             if (name == null) {
@@ -262,8 +246,6 @@ public class InventoryProvider extends ContentProvider {
             }
         }
 
-        // If the {@link PetEntry#COLUMN_PET_GENDER} key is present,
-        // check that the gender value is valid.
         if (values.containsKey(InventoryEntry.COLUMN_PRODUCT_PRICE)) {
             Float price = values.getAsFloat(InventoryEntry.COLUMN_PRODUCT_PRICE);
             if (price == null) {
@@ -271,18 +253,13 @@ public class InventoryProvider extends ContentProvider {
             }
         }
 
-        // If the {@link PetEntry#COLUMN_PET_WEIGHT} key is present,
-        // check that the weight value is valid.
         if (values.containsKey(InventoryEntry.COLUMN_PRODUCT_QUANTITY)) {
-            // Check that the weight is greater than or equal to 0 kg
             Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_PRODUCT_QUANTITY);
             if (quantity == null) {
                 throw new IllegalArgumentException("You must enter a quantity for the product.");
             }
         }
 
-        // If the {@link PetEntry#COLUMN_PET_NAME} key is present,
-        // check that the name value is not null.
         if (values.containsKey(InventoryEntry.COLUMN_PRODUCT_SUPPLIER)) {
             String supplier = values.getAsString(InventoryEntry.COLUMN_PRODUCT_SUPPLIER);
             if (supplier == null) {
@@ -290,46 +267,33 @@ public class InventoryProvider extends ContentProvider {
             }
         }
 
-        // If the {@link PetEntry#COLUMN_PET_NAME} key is present,
-        // check that the name value is not null.
         if (values.containsKey(InventoryEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL)) {
             String supplierEmail = values.getAsString(InventoryEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL);
             if (supplierEmail == null) {
                 throw new IllegalArgumentException("You must enter a product supplier email.");
             }
         }
-/*        // If the {@link PetEntry#COLUMN_PET_WEIGHT} key is present,
-        // check that the weight value is valid.
-        if (values.containsKey(InventoryEntry.COLUMN_PRODUCT_SUPPLIER)) {
-            // Check that the weight is greater than or equal to 0 kg
-             weight = values.getAsInteger(InventoryEntry.COLUMN_PRODUCT_SUPPLIER);
-            if (weight != null && weight < 0) {
-                throw new IllegalArgumentException("Pet requires valid weight");
-            }
-        }*/
 
-        // If there are no values to update, then don't try to update the database
         if (values.size() == 0) {
             return 0;
         }
 
-        // Notify all listeners that the data has changed for the pet content URI.
+        // Notify all listeners that the data has changed for the content URI of the product.
         getContext().getContentResolver().notifyChange(uri, null);
-        // No need to check the breed, any value is valid (including null).
 
-        // Otherwise, get writable database to update the data
+
+        // Get writable database to update data
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
-        // Perform the update on the database and get the number of rows affected
+        // Update the database and get the number of rows affected
         int rowsUpdated = database.update(InventoryEntry.TABLE_NAME, values, selection, selectionArgs);
 
-        // If 1 or more rows were updated, then notify all listeners that the data at the
-        // given URI has changed
+        // If > 01 rows are updated notify all listeners that the data for the URI has changed
         if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
-        // Return the number of rows updated
+        // Return number of rows updated
         return rowsUpdated;
     }
 

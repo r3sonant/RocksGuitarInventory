@@ -98,12 +98,12 @@ public final class InventoryContract {
     }
 
     /**
-     * URI matcher code for the content URI for the pets table
+     * URI matcher code for the content URI for the inventory table
      */
     private static final int PRODUCTS = 100;
 
     /**
-     * URI matcher code for the content URI for a single pet in the pets table
+     * URI matcher code for the content URI for a single product in the inventory table
      */
     private static final int PRODUCT_ID = 101;
 
@@ -116,22 +116,10 @@ public final class InventoryContract {
 
     // Static initializer. This is run the first time anything is called from this class.
     static {
-        // The calls to addURI() go here, for all of the content URI patterns that the provider
-        // should recognize. All paths added to the UriMatcher have a corresponding code to return
-        // when a match is found.
-
-        // The content URI of the form "content://com.example.android.pets/pets" will map to the
-        // integer code {@link #PRODUCTS}. This URI is used to provide access to MULTIPLE rows
-        // of the pets table.
+        // URI matcher. Corresponding code is returned when a match is found. Applies to whole table.
         sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY, PRODUCTS);
 
-        // The content URI of the form "content://com.example.android.pets/pets/#" will map to the
-        // integer code {@link #PRODUCT_ID}. This URI is used to provide access to ONE single row
-        // of the pets table.
-        //
-        // In this case, the "#" wildcard is used where "#" can be substituted for an integer.
-        // For example, "content://com.example.android.pets/pets/3" matches, but
-        // "content://com.example.android.pets/pets" (without a number at the end) doesn't match.
+        // URI matcher for single product in table.
         sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY + "/#", PRODUCT_ID);
     }
 }
