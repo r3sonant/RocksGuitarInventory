@@ -4,7 +4,7 @@
     <string name="empty_view_title">This guitar has no strings!</string>
     <string name="empty_view_instructions">Please click the add button to add some items.</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="sale">Sale</string>
+    <string name="Sell">Sell</string>
     <string name="new_product">New Product</string>
     <string name="edit_product">Edit Product</string>
     <string name="action_save">Save</string>

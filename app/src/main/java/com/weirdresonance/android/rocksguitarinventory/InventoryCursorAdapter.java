@@ -42,6 +42,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
         TextView quantityTextView = (TextView) view.findViewById(R.id.product_quantity);
         Button sell = (Button) view.findViewById(R.id.sell_button);
 
+        int idColumnIndex = cursor.getColumnIndex(InventoryEntry._ID);
         int nameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_NAME);
         int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_PRICE);
         int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_QUANTITY);
@@ -49,40 +50,35 @@ public class InventoryCursorAdapter extends CursorAdapter {
         String productName = cursor.getString(nameColumnIndex);
         String productPrice = cursor.getString(priceColumnIndex);
         final String productQuantity = cursor.getString(quantityColumnIndex);
+        final int currentId = cursor.getInt(idColumnIndex);
 
         nameTextView.setText(productName);
         priceTextView.setText(productPrice);
         quantityTextView.setText(productQuantity);
 
-        //TODO: https://discussions.udacity.com/t/sell-button-issue/222243/25
-        // https://discussions.udacity.com/t/problem-with-sold-button/310478/13
-        // https://stackoverflow.com/questions/22442479/custom-cursoradapter-wrong-position/22444284#22444284
 
+        quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_QUANTITY);
 
-        //final int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryEntry.COLUMN_PRODUCT_QUANTITY));
+        final int inventoryQuantity = cursor.getInt(quantityColumnIndex);
+        //final int quantityID = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryEntry.COLUMN_PRODUCT_QUANTITY));
 
         sell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                //Uri currentProductUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, currentId);
+
+
+
 
                 ContentValues values = new ContentValues();
 
-                int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_QUANTITY);
-/*                int nameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_NAME);
-                int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_PRICE);
-                int categoryColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_CATEGORY_IMAGE);*/
 
-                int inventoryQuantity = cursor.getInt(quantityColumnIndex);
-/*                String inventoryName = cursor.getString(nameColumnIndex);
-                String inventoryColour = cursor.getString(colourColumnIndex);
-                int inventoryPrice = cursor.getInt(priceColumnIndex);
-                String inventoryCategory = cursor.getString(categoryColumnIndex);*/
 
                 if (inventoryQuantity > 0){
                     int newQuantity = inventoryQuantity - 1;
                     values.put(InventoryEntry.COLUMN_PRODUCT_QUANTITY, newQuantity);
-                    Uri newUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, newQuantity);
+                    Uri newUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, currentId);
                     context.getContentResolver().update(
                             newUri,
                             values ,
@@ -93,38 +89,6 @@ public class InventoryCursorAdapter extends CursorAdapter {
                     Toast.makeText(context, context.getString(R.string.out_of_stock),
                             Toast.LENGTH_SHORT).show();
                 }
-
-
-
-
-
-
-
-/*                ContentResolver mContentResolver = view.getContext().getContentResolver();
-
-                ContentValues values = new ContentValues();
-
-                int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_QUANTITY);
-                int Quantity = cursor.getInt(quantityColumnIndex);
-                if (Quantity > 0){
-                    int decrementedQuantity = Quantity --;
-                    values.put(InventoryEntry.COLUMN_PRODUCT_QUANTITY, decrementedQuantity);
-                    Uri newUri = mContentResolver.insert(InventoryEntry.CONTENT_URI, values);
-                }else {
-
-                    Toast.makeText(context, context.getString(R.string.out_of_stock),
-                            Toast.LENGTH_SHORT).show();
-                }*/
-
-/*                int quantity = Integer.parseInt(productQuantity);
-                //int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryEntry.COLUMN_PRODUCT_QUANTITY));
-                if (quantity<0){
-                    Log.v("ProductCursorAdpter","You cannot have less than 1 product");
-                    return;
-                }
-                quantity--;
-                //sellProduct();
-                values.put(InventoryEntry.COLUMN_PRODUCT_QUANTITY, quantityString);*/
             }
         });
     }
