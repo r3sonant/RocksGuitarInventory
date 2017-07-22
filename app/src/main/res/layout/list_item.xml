@@ -101,7 +101,7 @@
             android:layout_alignParentRight="true"
             android:focusable="false"
             android:layout_margin="8dp"
-            android:text="@string/Sell" />
+            android:text="@string/Sale" />
 
 
     </RelativeLayout>

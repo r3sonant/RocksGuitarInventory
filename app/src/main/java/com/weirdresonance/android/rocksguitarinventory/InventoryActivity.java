@@ -113,7 +113,8 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
                 InventoryEntry._ID,
                 InventoryEntry.COLUMN_PRODUCT_NAME,
                 InventoryEntry.COLUMN_PRODUCT_PRICE,
-                InventoryEntry.COLUMN_PRODUCT_QUANTITY};
+                InventoryEntry.COLUMN_PRODUCT_QUANTITY,
+                InventoryEntry.COLUMN_PRODUCT_PICTURE};
 
         // Loader to execute ContentProvider query in background thread.
         return new CursorLoader(this,   // Parent activity context

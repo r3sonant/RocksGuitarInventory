@@ -29,7 +29,8 @@
         <activity
             android:name=".EditorActivity"
             android:parentActivityName=".InventoryActivity"
-            android:theme="@style/AppTheme.ActionBar">
+            android:theme="@style/AppTheme.ActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".InventoryActivity" />

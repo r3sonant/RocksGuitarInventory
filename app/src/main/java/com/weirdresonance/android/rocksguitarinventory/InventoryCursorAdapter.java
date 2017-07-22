@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.InventoryEntry;
 
-import static com.weirdresonance.android.rocksguitarinventory.R.id.product_image;
+import static com.weirdresonance.android.rocksguitarinventory.R.id.product_picture;
 
 
 /**
@@ -36,44 +36,45 @@ public class InventoryCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, final Context context, final Cursor cursor) {
-        ImageView pictureImageView = (ImageView) view.findViewById(product_image);
+        // Get the views in the list view.
+        ImageView pictureImageView = (ImageView) view.findViewById(product_picture);
         TextView nameTextView = (TextView) view.findViewById(R.id.product_name);
         TextView priceTextView = (TextView) view.findViewById(R.id.product_price);
         TextView quantityTextView = (TextView) view.findViewById(R.id.product_quantity);
-        Button sell = (Button) view.findViewById(R.id.sell_button);
+        Button sale = (Button) view.findViewById(R.id.sell_button);
 
+        // Get the ID's of the DB columns.
         int idColumnIndex = cursor.getColumnIndex(InventoryEntry._ID);
         int nameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_NAME);
         int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_PRICE);
         int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_QUANTITY);
+        int imageUri = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_PICTURE);
 
+        // Get the data from the DB for the relevant row.
         String productName = cursor.getString(nameColumnIndex);
         String productPrice = cursor.getString(priceColumnIndex);
         final String productQuantity = cursor.getString(quantityColumnIndex);
         final int currentId = cursor.getInt(idColumnIndex);
+        String productImage = cursor.getString(imageUri);
 
+        // Set the values from the DB on the views.
         nameTextView.setText(productName);
         priceTextView.setText(productPrice);
         quantityTextView.setText(productQuantity);
 
+        Uri imagePath = Uri.parse(productImage);
+        pictureImageView.setImageURI(imagePath);
 
         quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_PRODUCT_QUANTITY);
 
         final int inventoryQuantity = cursor.getInt(quantityColumnIndex);
-        //final int quantityID = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryEntry.COLUMN_PRODUCT_QUANTITY));
 
-        sell.setOnClickListener(new View.OnClickListener() {
+        // listen for the sale button to be clicked and decrement the quantity if it is.
+        sale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                //Uri currentProductUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, currentId);
-
-
-
-
                 ContentValues values = new ContentValues();
-
-
 
                 if (inventoryQuantity > 0){
                     int newQuantity = inventoryQuantity - 1;

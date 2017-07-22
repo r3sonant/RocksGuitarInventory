@@ -39,7 +39,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.weirdresonance.android.rocksguitarinventory.R.id.incDecLayout;
 import static com.weirdresonance.android.rocksguitarinventory.R.id.orderMoreLayout;
 
 /**
@@ -50,55 +49,41 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     public static final String LOG_TAG = EditorActivity.class.getSimpleName();
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    /**
-     * Data loader identifier for the product.
-     */
+
+    // Data loader identifier for the product.
     private static final int EXISTING_PRODUCT_LOADER = 0;
-    /**
-     * Content URI for an existing product. This will be null if a new product.
-     */
+
+    //Content URI for an existing product. This will be null if a new product.
     private Uri mCurrentProductUri;
-    /**
-     * Product name EditText field.
-     */
+
+    // Product name EditText field.
     private EditText mNameEditText;
-    /**
-     * Price EditText field.
-     */
+
+    //Price EditText field.
     private EditText mPriceEditText;
-    /**
-     * Quantity EditText field.
-     */
+
+    // Quantity EditText field.
     private EditText mQuantityEditText;
-    /**
-     * Supplier EditText field.
-     */
+
+    //Supplier EditText field.
     private EditText mSupplierEditText;
-    /**
-     * Supplier Email Edit
-     */
+
+    // Supplier Email Edit
     private EditText mSupplierEmailEditText;
 
-    // TODO: Need to add the component to take and add the photo.
-    /**
-     * Increase multiplier
-     */
+    //Increase multiplier.
     private EditText mStockMultiplier;
-    /**
-     * Flag to track if a change has been made.
-     */
-    private boolean mProductHasChanged = false;
-    private String mCurrentPhotoPath;
-    String mCurrentImageUri;
 
+    // Flag to track if a change has been made.
+    private boolean mProductHasChanged = false;
+
+    // Current image URI.
+    private String mCurrentImageUri;
+
+    // Image view for the product.
     private ImageView mProductImageView;
 
-
-
-
-    /**
-     * Listener to detect if the user has interacted with the view so we know they are modifying something.
-     */
+    // Listener to detect if the user has interacted with the view so we know they are modifying something.
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -117,7 +102,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mCurrentProductUri = intent.getData();
 
         // Get the views to be hidden ID's.
-        View incdDecLayout = (findViewById(incDecLayout));
+        View incDecLayout = (findViewById(R.id.incDecLayout));
         View orderMoreButton = (findViewById(orderMoreLayout));
 
         // If the intent was called by clicking the Add Product button then show New Product as the title.
@@ -125,7 +110,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             setTitle(getString(R.string.new_product));
 
             // Hide the decrease, increase and order buttons as they aren't needed when creating a new product.
-            incdDecLayout.setVisibility(View.GONE);
+            incDecLayout.setVisibility(View.GONE);
             orderMoreButton.setVisibility(View.GONE);
 
             // Hide the options menu. It will be redrawn later to show the done / save tick.
@@ -135,7 +120,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             setTitle(getString(R.string.edit_product));
 
             // Make the buttonPanel visible.
-            incdDecLayout.setVisibility(View.VISIBLE);
+            incDecLayout.setVisibility(View.VISIBLE);
             orderMoreButton.setVisibility(View.VISIBLE);
 
             // Initialize a loader to read from the database and display.
@@ -157,9 +142,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mQuantityEditText.setOnTouchListener(mTouchListener);
         mSupplierEditText.setOnTouchListener(mTouchListener);
         mSupplierEmailEditText.setOnTouchListener(mTouchListener);
-
-/*        String stringMultiplier = mStockMultiplier.getText().toString();
-        final int multiplier = Integer.valueOf(stringMultiplier);*/
 
         // Get the decrease button and then set an onclicklistener on it.
         ImageButton decrease = (ImageButton) findViewById(R.id.decrease);
@@ -187,16 +169,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             @Override
             public void onClick(View v) {
                 takePicture();
-
-
-
-
             }
         });
 
         // Get the Order button and then set an onlclicklistener on it.
         Button order = (Button) findViewById(R.id.order);
 
+        // Set onclick listener on the order more button.
         order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -266,17 +245,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     // Validates the entries entered in for the new item. Also validates if email address is of a valid format.
     private void validateEntries() {
         // Read from input fields and trim input.
-        String pictureString = "picture";
         String nameString = mNameEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
         String supplierString = mSupplierEditText.getText().toString().trim();
         String supplierEmailString = mSupplierEmailEditText.getText().toString().trim();
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-        if (mCurrentProductUri == null &&
-                (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(priceString) ||
-                        TextUtils.isEmpty(quantityString) || TextUtils.isEmpty(supplierString)
-                        || TextUtils.isEmpty(supplierEmailString) || (!supplierEmailString.matches(emailPattern)))) {
+        if (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(priceString) ||
+                TextUtils.isEmpty(quantityString) || TextUtils.isEmpty(supplierString)
+                || TextUtils.isEmpty(supplierEmailString) || mCurrentImageUri == null || (!supplierEmailString.matches(emailPattern))) {
             // Warn of unsaved changes.
             DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
                 @Override
@@ -287,14 +264,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
             fillAllFieldsWarning(discardButtonClickListener);
 
-            return;
         } else {
-            // Save the product in the DB.
+            // Save the product to the DB.
             saveProduct();
             finish();
-            return;
         }
-
     }
 
     /**
@@ -332,6 +306,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String supplierString = mSupplierEditText.getText().toString().trim();
         String supplierEmailString = mSupplierEmailEditText.getText().toString().trim();
 
+
         // If all fields are empty return.
         if (mCurrentProductUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(priceString) &&
@@ -354,6 +329,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(InventoryEntry.COLUMN_PRODUCT_QUANTITY, quantityString);
         values.put(InventoryEntry.COLUMN_PRODUCT_SUPPLIER, supplierString);
         values.put(InventoryEntry.COLUMN_PRODUCT_SUPPLIER_EMAIL, supplierEmailString);
+        if (mCurrentImageUri != null) {
+            values.put(InventoryEntry.COLUMN_PRODUCT_PICTURE, mCurrentImageUri);
+        }
 
         // Is this a new or existing product?
         if (mCurrentProductUri == null) {
@@ -536,10 +514,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
 
-
-
-
-
     // Create an intent and open an email client on the device passing in values from the DB for
     // the order.
     public void submitOrder() {
@@ -614,7 +588,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     // Warn the user they must fill in all fields before proceeding.
     private void fillAllFieldsWarning(DialogInterface.OnClickListener discardButtonClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Please fill in all fields and enter a valid email address before saving.");
+        builder.setMessage(R.string.please_fill_all);
         builder.setPositiveButton(R.string.discard, discardButtonClickListener);
         builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -629,70 +603,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
 
-
-
-
-/*    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "rgi_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,   //prefix
-                ".jpg",          //suffix
-                storageDir       //directory
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-*//*    private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "rgi_" + timeStamp + ".jpg";
-        File photo = new File(Environment.getExternalStorageDirectory(),  imageFileName);
-        return photo;
-    }*//*
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                Log.e(LOG_TAG, "Failed to save image " + ex.toString());
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.weirdresonance.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-        }
-    }*/
-
-/*    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            ImageView pictureImage = (ImageView) findViewById(R.id.product_image);
-            pictureImage.setImageBitmap(imageBitmap);
-        }
-    }*/
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            // mProductImageView.setImageBitmap(getBitmapFromUri(Uri.parse(mCurrentImageUri)));
             mProductImageView.setImageURI(Uri.parse(mCurrentImageUri));
         }
     }
@@ -721,8 +634,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
-
-
+    // Create the image file and set the path for saving.
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -734,12 +646,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 storageDir      /* directory */
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
-    private Bitmap getBitmapFromUri(Uri uri) {
+    // Load the image.
+    public Bitmap getBitmapFromUri(Uri uri) {
 
         ParcelFileDescriptor parcelFileDescriptor = null;
         try {
@@ -753,7 +664,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             resizeImage(image, maxWidth, maxHeight);
             return image;
         } catch (Exception e) {
-            Log.e(LOG_TAG, "Failed to load image.", e);
+            Log.e(LOG_TAG, "Failed to load the image.", e);
             return null;
         } finally {
             try {
@@ -767,6 +678,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
+    // Resize the product image.
     private Bitmap resizeImage(Bitmap image, int maxWidth, int maxHeight) {
         if (maxHeight > 0 && maxWidth > 0) {
             int width = image.getWidth();
@@ -787,6 +699,4 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return image;
         }
     }
-
-
 }
