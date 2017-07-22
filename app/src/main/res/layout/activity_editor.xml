@@ -219,6 +219,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:background="@color/buttonBG"
+            android:textColor="@color/primary_light"
             android:focusable="false"
             android:text="@string/order_more" />
     </RelativeLayout>

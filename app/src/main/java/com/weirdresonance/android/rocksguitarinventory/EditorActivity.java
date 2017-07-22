@@ -19,6 +19,8 @@ import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -38,6 +40,9 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.weirdresonance.android.rocksguitarinventory.R.id.orderMoreLayout;
 
@@ -136,6 +141,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mStockMultiplier = (EditText) findViewById(R.id.multiplyer);
         mProductImageView = (ImageView) findViewById(R.id.product_image);
 
+        mPriceEditText.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(15,2)});
+
         // Set OnTouchListeners on all the fields so we know when the user interacts with them.
         mNameEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
@@ -182,6 +189,25 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 submitOrder();
             }
         });
+    }
+
+    public class DecimalDigitsInputFilter implements InputFilter {
+
+        Pattern mPattern;
+
+        public DecimalDigitsInputFilter(int digitsBeforeZero,int digitsAfterZero) {
+            mPattern= Pattern.compile("[0-9]{0," + (digitsBeforeZero-1) + "}+((\\.[0-9]{0," + (digitsAfterZero-1) + "})?)||(\\.)?");
+        }
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            Matcher matcher=mPattern.matcher(dest);
+            if(!matcher.matches())
+                return "";
+            return null;
+        }
+
     }
 
     @Override
@@ -253,7 +279,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         if (TextUtils.isEmpty(nameString) || TextUtils.isEmpty(priceString) ||
                 TextUtils.isEmpty(quantityString) || TextUtils.isEmpty(supplierString)
-                || TextUtils.isEmpty(supplierEmailString) || mCurrentImageUri == null || (!supplierEmailString.matches(emailPattern))) {
+                || TextUtils.isEmpty(supplierEmailString) || null == mProductImageView.getDrawable() || (!supplierEmailString.matches(emailPattern))) {
             // Warn of unsaved changes.
             DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
                 @Override
@@ -410,6 +436,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mQuantityEditText.setText(Integer.toString(quantity));
             mSupplierEditText.setText(supplier);
             mSupplierEmailEditText.setText(supplierEmail);
+            mCurrentImageUri = productImage;
             if (productImage != null) {
                 mProductImageView.setImageBitmap(getBitmapFromUri(Uri.parse(productImage)));
             }
@@ -630,15 +657,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
-
         }
     }
 
     // Create the image file and set the path for saving.
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.UK).format(new Date());
+        String imageFileName = "RGI_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */

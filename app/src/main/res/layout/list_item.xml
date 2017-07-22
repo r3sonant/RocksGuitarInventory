@@ -21,7 +21,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp">
 
         <!-- Product picture -->
         <ImageView
@@ -99,6 +100,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:background="@color/buttonBG"
+            android:textColor="@color/primary_light"
             android:focusable="false"
             android:layout_margin="8dp"
             android:text="@string/Sale" />
