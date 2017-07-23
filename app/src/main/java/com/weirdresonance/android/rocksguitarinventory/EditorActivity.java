@@ -88,6 +88,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     // Image view for the product.
     private ImageView mProductImageView;
 
+    // ImageButton for taking the picture.
+    private ImageButton mTakePicture;
+
+    // ImageButton for increasing the quantity.
+    private ImageButton mIncreaseQuanity;
+
+    // ImageButton for the decrease quantity.
+    private ImageButton mDecreaseQuantity;
+
     // Listener to detect if the user has interacted with the view so we know they are modifying something.
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
@@ -138,10 +147,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mQuantityEditText = (EditText) findViewById(R.id.edit_product_quantity);
         mSupplierEditText = (EditText) findViewById(R.id.edit_product_supplier);
         mSupplierEmailEditText = (EditText) findViewById(R.id.edit_product_supplier_email);
-        mStockMultiplier = (EditText) findViewById(R.id.multiplyer);
+        mStockMultiplier = (EditText) findViewById(R.id.multiplier);
         mProductImageView = (ImageView) findViewById(R.id.product_image);
+        mTakePicture = (ImageButton) findViewById(R.id.takePicture);
+        mIncreaseQuanity = (ImageButton) findViewById(R.id.increase);
+        mDecreaseQuantity = (ImageButton) findViewById(R.id.decrease);
 
-        mPriceEditText.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(15,2)});
+
+        mPriceEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(15, 2)});
 
         // Set OnTouchListeners on all the fields so we know when the user interacts with them.
         mNameEditText.setOnTouchListener(mTouchListener);
@@ -149,6 +162,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mQuantityEditText.setOnTouchListener(mTouchListener);
         mSupplierEditText.setOnTouchListener(mTouchListener);
         mSupplierEmailEditText.setOnTouchListener(mTouchListener);
+        mTakePicture.setOnTouchListener(mTouchListener);
+        mIncreaseQuanity.setOnTouchListener(mTouchListener);
+        mDecreaseQuantity.setOnTouchListener(mTouchListener);
 
         // Get the decrease button and then set an onclicklistener on it.
         ImageButton decrease = (ImageButton) findViewById(R.id.decrease);
@@ -189,25 +205,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 submitOrder();
             }
         });
-    }
-
-    public class DecimalDigitsInputFilter implements InputFilter {
-
-        Pattern mPattern;
-
-        public DecimalDigitsInputFilter(int digitsBeforeZero,int digitsAfterZero) {
-            mPattern= Pattern.compile("[0-9]{0," + (digitsBeforeZero-1) + "}+((\\.[0-9]{0," + (digitsAfterZero-1) + "})?)||(\\.)?");
-        }
-
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-
-            Matcher matcher=mPattern.matcher(dest);
-            if(!matcher.matches())
-                return "";
-            return null;
-        }
-
     }
 
     @Override
@@ -540,7 +537,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
-
     // Create an intent and open an email client on the device passing in values from the DB for
     // the order.
     public void submitOrder() {
@@ -552,24 +548,24 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             String supplierEmail = mSupplierEmailEditText.getText().toString();
 
             // Create the email content
-            String email = "mailto:"
+            String email = getString(R.string.mailto)
                     + supplierEmail
-                    + "?subject="
-                    + Uri.encode("New product order from Rocks Guitars for "
+                    + getString(R.string.subject)
+                    + Uri.encode(getString(R.string.new_product_order)
                     + productName)
-                    + "&body="
-                    + Uri.encode("Rocks Guitars would like to place an order for more of the following product."
+                    + getString(R.string.body)
+                    + Uri.encode(getString(R.string.would_like_to_place_order)
                     + "\n\n"
-                    + "Product: "
+                    + getString(R.string.email_product)
                     + productName
                     + "\n\n"
-                    + "Quantity: (Please fill in)"
+                    + getString(R.string.quantity_please_fill)
                     + "\n\n"
-                    + "Thank you "
+                    + getString(R.string.thank_you)
                     + supplierName
                     + "."
                     + "\n\n"
-                    + "Rocks Guitars (orderrequest@rocksguitars.com)");
+                    + getString(R.string.rocks_guitars_email));
 
             // Create Intent to send email
             Intent intent = new Intent(Intent.ACTION_SENDTO);
@@ -598,7 +594,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     // Warn if unsaved changes.
     private void showFieldsChangedOrderMore(DialogInterface.OnClickListener discardButtonClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Changes have been made to the product. Please save before ordering more.");
+        builder.setMessage(R.string.change_have_been_made);
         builder.setPositiveButton(R.string.discard, discardButtonClickListener);
         builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -629,7 +625,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         alertDialog.show();
     }
 
-
+    // Set the picture to the image view.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
@@ -724,5 +720,24 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         } else {
             return image;
         }
+    }
+
+    public class DecimalDigitsInputFilter implements InputFilter {
+
+        Pattern mPattern;
+
+        public DecimalDigitsInputFilter(int digitsBeforeZero, int digitsAfterZero) {
+            mPattern = Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}+((\\.[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\.)?");
+        }
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            Matcher matcher = mPattern.matcher(dest);
+            if (!matcher.matches())
+                return "";
+            return null;
+        }
+
     }
 }

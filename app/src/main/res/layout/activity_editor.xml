@@ -106,23 +106,23 @@
             android:id="@+id/edit_product_supplier_email"
             style="@style/EditTextStyle"
             android:hint="@string/supplieremail"
-            android:inputType="textCapWords" />
+            android:inputType="textEmailAddress" />
 
     </LinearLayout>
 
-    <!-- Layout to hold the icrement / decrement edittext, label and buttons. Hidden in create product -->
+    <!-- Layout to hold the increment / decrement edittext, label and buttons. Hidden in create product -->
     <LinearLayout
         android:id="@+id/incDecLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!-- Increment / Decrement multipier label view -->
+        <!-- Increment / Decrement multiplier label view -->
         <TextView
             android:id="@+id/textView"
             style="@style/LabelStyle"
             android:layout_height="wrap_content"
-            android:text="@string/qunatity_x"
+            android:text="@string/quantity_x"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
         <LinearLayout
@@ -133,7 +133,7 @@
 
             <!-- Increment / Decrement multiplier -->
             <EditText
-                android:id="@+id/multiplyer"
+                android:id="@+id/multiplier"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -143,7 +143,6 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-
 
                 <!-- Decrease quantity button -->
                 <ImageButton
@@ -182,7 +181,8 @@
         <RelativeLayout
             android:id="@+id/takePictureLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
 
             <ImageButton
                 android:id="@+id/takePicture"
@@ -202,8 +202,9 @@
             <ImageView
                 android:id="@+id/product_image"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true" />
+                android:layout_height="128dp"
+                android:layout_centerHorizontal="true"
+                android:rotation="90" />
         </RelativeLayout>
 
     </LinearLayout>
@@ -217,12 +218,12 @@
         <Button
             android:id="@+id/order"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_alignParentBottom="true"
             android:background="@color/buttonBG"
-            android:textColor="@color/primary_light"
             android:focusable="false"
-            android:text="@string/order_more" />
+            android:text="@string/order_more"
+            android:textColor="@color/primary_light" />
     </RelativeLayout>
 
 

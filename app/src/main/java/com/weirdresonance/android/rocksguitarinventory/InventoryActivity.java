@@ -72,14 +72,6 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
             }
         });
 
-/*        Button sale = (Button) findViewById(R.id.sale_button);
-
-        sale.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-
-            }
-        });*/
-
         getLoaderManager().initLoader(PRODUCT_LOADER, null, this);
     }
 

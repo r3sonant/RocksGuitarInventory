@@ -10,7 +10,7 @@ import com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.In
  * Created by Stephen.Pierce on 11/07/2017.
  */
 
-public class InventoryDbHelper extends SQLiteOpenHelper{
+public class InventoryDbHelper extends SQLiteOpenHelper {
 
     public static final String LOG_TAG = InventoryDbHelper.class.getSimpleName();
 
@@ -30,7 +30,7 @@ public class InventoryDbHelper extends SQLiteOpenHelper{
      * @param context
      */
     public InventoryDbHelper(Context context) {
-        super(context,DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override

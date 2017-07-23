@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">Rocks Guitar Inventory</string>
-    <string name="action_settings">Settings</string>
     <string name="empty_view_title">This guitar has no strings!</string>
     <string name="empty_view_instructions">Please click the add button to add some items.</string>
-    <string name="title_activity_main">MainActivity</string>
     <string name="Sale">Sale</string>
     <string name="new_product">New Product</string>
     <string name="edit_product">Edit Product</string>
@@ -12,7 +10,7 @@
     <string name="editor_product_insert_failed">Inserting the Product Failed.</string>
     <string name="editor_product_insert_successful">Inserting the Product Succeeded.</string>
     <string name="editor_product_update_failed">The Product Update Failed.</string>
-    <string name="editor_product_update_successful">Updating the Product was Succesful</string>
+    <string name="editor_product_update_successful">Updating the Product was Successful</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep Editing</string>
     <string name="unsaved_changes_dialog_msg">There are unsaved changes</string>
@@ -32,10 +30,19 @@
     <string name="supplier">Supplier</string>
     <string name="supplier_email_colon">Supplier Email:</string>
     <string name="supplieremail">SupplierEmail</string>
-    <string name="qunatity_x">Qunatity x:</string>
+    <string name="quantity_x">Qunatity x:</string>
     <string name="_1">1</string>
     <string name="delete_everything">Delete Everything</string>
     <string name="order_more">Order More</string>
-    <string name="editor_image_is_null">Please take a picture of the product.</string>
     <string name="please_fill_all">Please fill in all fields, enter a valid email address and take a picture of the product before saving.</string>
+    <string name="change_have_been_made">Changes have been made to the product. Please save before ordering more.</string>
+    <string name="new_product_order">New product order from Rocks Guitars for&#160;</string>
+    <string name="would_like_to_place_order">Rocks Guitars would like to place an order for more of the following product.</string>
+    <string name="quantity_please_fill">Quantity: (Please fill in)</string>
+    <string name="thank_you">Thank you&#160;</string>
+    <string name="rocks_guitars_email">Rocks Guitars (orderrequest@rocksguitars.com)</string>
+    <string name="subject">\?subject=</string>
+    <string name="mailto">mailto:</string>
+    <string name="body"><![CDATA[&body=]]></string>
+    <string name="email_product">Product:&#160;</string>
 </resources>

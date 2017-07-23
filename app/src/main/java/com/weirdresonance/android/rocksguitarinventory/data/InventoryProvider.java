@@ -7,8 +7,6 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import static com.weirdresonance.android.rocksguitarinventory.data.InventoryContract.CONTENT_AUTHORITY;
@@ -22,18 +20,18 @@ import static com.weirdresonance.android.rocksguitarinventory.data.InventoryCont
 
 public class InventoryProvider extends ContentProvider {
 
-    /** Log message tag */
+    /**
+     * Log message tag
+     */
     public static final String LOG_TAG = InventoryProvider.class.getSimpleName();
-
-    /** Declare the database helper object */
-    private InventoryDbHelper mDbHelper;
-
-    /** Matcher code for the content URI of the inventory table */
+    /**
+     * Matcher code for the content URI of the inventory table
+     */
     private static final int PRODUCTS = 100;
-
-    /** Matcher code for the content URI for a single product in the inventory table */
+    /**
+     * Matcher code for the content URI for a single product in the inventory table
+     */
     private static final int PRODUCT_ID = 101;
-
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     // Static initializer. This is only run this class is called.
@@ -44,6 +42,11 @@ public class InventoryProvider extends ContentProvider {
         // URI matcher for an item in the inventory table.
         sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_INVENTORY + "/#", PRODUCT_ID);
     }
+
+    /**
+     * Declare the database helper object
+     */
+    private InventoryDbHelper mDbHelper;
 
     @Override
     public boolean onCreate() {
@@ -73,7 +76,7 @@ public class InventoryProvider extends ContentProvider {
             case PRODUCT_ID:
                 // Set the selection to the ID of the row to be queried.
                 selection = InventoryContract.InventoryEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 // Query the inventory table for the row that matches the passed in ID.
                 cursor = database.query(InventoryEntry.TABLE_NAME, projection, selection, selectionArgs,
@@ -89,6 +92,7 @@ public class InventoryProvider extends ContentProvider {
 
     /**
      * Returns the data MIME type of the content URI.
+     *
      * @param uri
      * @return
      */
@@ -107,12 +111,13 @@ public class InventoryProvider extends ContentProvider {
 
     /**
      * Insert new product data into the provider if the URI passed in is for PRODUCTS.
+     *
      * @param uri
      * @param values
      * @return
      */
     @Override
-    public Uri insert( Uri uri, ContentValues values) {
+    public Uri insert(Uri uri, ContentValues values) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case PRODUCTS:
@@ -165,8 +170,6 @@ public class InventoryProvider extends ContentProvider {
         // Insert the new provided product into the database.
         long id = database.insert(InventoryEntry.TABLE_NAME, null, values);
 
-
-        // TODO: Make sure the comments make sense.
         // If the ID is -1, then the insertion failed. Log an error and return null.
         if (id == -1) {
             Log.e(LOG_TAG, "Failed to insert row for " + uri);
@@ -182,8 +185,8 @@ public class InventoryProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        //TODO: Clean up comments here
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+
         // Get writable database
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -194,7 +197,7 @@ public class InventoryProvider extends ContentProvider {
         switch (match) {
             case PRODUCTS:
                 // Delete all rows that match the selection and selection args
-                rowsDeleted =  database.delete(InventoryEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(InventoryEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case PRODUCT_ID:
                 // Delete a single row given by the ID in the URI
@@ -216,9 +219,10 @@ public class InventoryProvider extends ContentProvider {
         return rowsDeleted;
     }
 
+    // Update the product.
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        //TODO: Clean up comments here.
+
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case PRODUCTS:
@@ -226,7 +230,7 @@ public class InventoryProvider extends ContentProvider {
             case PRODUCT_ID:
                 // Extracts the row to be updated based on the _ID.
                 selection = InventoryEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateProduct(uri, values, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
@@ -280,7 +284,6 @@ public class InventoryProvider extends ContentProvider {
 
         // Notify all listeners that the data has changed for the content URI of the product.
         getContext().getContentResolver().notifyChange(uri, null);
-
 
         // Get writable database to update data
         SQLiteDatabase database = mDbHelper.getWritableDatabase();

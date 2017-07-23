@@ -10,25 +10,45 @@ import android.provider.BaseColumns;
  */
 public final class InventoryContract {
 
-    // Empty constructor so the InventoryContract class can't be instantiated.
-    private InventoryContract() {
-    }
-
     /**
      * Content Authority for the content provider.
      */
     public static final String CONTENT_AUTHORITY = "com.weirdresonance.android.rocksguitarinventory";
-
     /**
      * Use the CONTENT_AUTHORITY to construct the base for all URI's the app will use to contact
      * the content provider.
      */
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-
     /**
      * Possible path to be appended to base URI.
      */
     public static final String PATH_INVENTORY = "inventory";
+    /**
+     * URI matcher code for the content URI for the inventory table
+     */
+    private static final int PRODUCTS = 100;
+    /**
+     * URI matcher code for the content URI for a single product in the inventory table
+     */
+    private static final int PRODUCT_ID = 101;
+    /**
+     * UriMatcher object to match the content URI to a corresponding code.
+     * The input that is passed into the constructor determines what is returned for the root URI.
+     */
+    private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+    // Static initializer. This is run the first time anything is called from this class.
+    static {
+        // URI matcher. Corresponding code is returned when a match is found. Applies to whole table.
+        sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY, PRODUCTS);
+
+        // URI matcher for single product in table.
+        sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY + "/#", PRODUCT_ID);
+    }
+
+    // Empty constructor so the InventoryContract class can't be instantiated.
+    private InventoryContract() {
+    }
 
     /**
      * Inner class to define all the constant values that will be used in the Inventory DB table.
@@ -51,7 +71,7 @@ public final class InventoryContract {
          * Unique ID number for each product in the DB.
          * <p>
          * Type: INTEGER
-          */
+         */
         public static final String _ID = BaseColumns._ID;
 
         /**
@@ -95,31 +115,5 @@ public final class InventoryContract {
          * Type: String
          */
         public static final String COLUMN_PRODUCT_SUPPLIER_EMAIL = "email";
-    }
-
-    /**
-     * URI matcher code for the content URI for the inventory table
-     */
-    private static final int PRODUCTS = 100;
-
-    /**
-     * URI matcher code for the content URI for a single product in the inventory table
-     */
-    private static final int PRODUCT_ID = 101;
-
-    /**
-     * UriMatcher object to match the content URI to a corresponding code.
-     * The input that is passed into the constructor determines what is returned for the root URI.
-     */
-    private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-
-
-    // Static initializer. This is run the first time anything is called from this class.
-    static {
-        // URI matcher. Corresponding code is returned when a match is found. Applies to whole table.
-        sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY, PRODUCTS);
-
-        // URI matcher for single product in table.
-        sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY + "/#", PRODUCT_ID);
     }
 }

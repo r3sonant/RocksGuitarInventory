@@ -76,17 +76,17 @@ public class InventoryCursorAdapter extends CursorAdapter {
 
                 ContentValues values = new ContentValues();
 
-                if (inventoryQuantity > 0){
+                if (inventoryQuantity > 0) {
                     int newQuantity = inventoryQuantity - 1;
                     values.put(InventoryEntry.COLUMN_PRODUCT_QUANTITY, newQuantity);
                     Uri newUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, currentId);
                     context.getContentResolver().update(
                             newUri,
-                            values ,
+                            values,
                             null,
                             null
                     );
-                }else {
+                } else {
                     Toast.makeText(context, context.getString(R.string.out_of_stock),
                             Toast.LENGTH_SHORT).show();
                 }
